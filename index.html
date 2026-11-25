@@ -409,6 +409,15 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 @media(max-width:600px){.tools,.areas{grid-template-columns:minmax(0,1fr)}.area,.area+.area,.area:nth-child(3){border-right:0;padding-left:0;border-top:1px solid var(--line)}.sdlog{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#boot{display:none}.marq div{animation:none}.js .rv,.js .ln>span{transition:none;opacity:1;transform:none}.big .w,.js .fw{transition:none}.js .fw{opacity:1;filter:none;transform:none}.js .draw path,.js .draw line{stroke-dashoffset:0;transition:none}.js .draw rect,.js .draw text{opacity:1}.status i{animation:none}.cwrap{height:auto}.pl{animation:none}.plf .nd,.plf .edge{transition:none}.pin,.cpin{position:relative;height:auto;padding-block:80px}.big .w{color:#000}.contact{position:relative;clip-path:none}.contact>.wrap{opacity:1;transform:none}.chint{display:none}.works .case{opacity:1}.hs{height:auto!important}.hpin{position:relative;height:auto;padding-block:80px}.track{flex-direction:column;width:auto;transform:none!important}.ch,.ch.end{width:auto}.line{display:none}}
 
+/* work cards */
+#work .case{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:clamp(20px,4vw,56px);align-items:center;padding:clamp(28px,4vw,44px) 0;border-top:1px solid rgba(255,255,255,.3);opacity:1;min-height:0}
+#work .co+.case{border-top:0}
+#work .case h3{font-size:clamp(28px,3.2vw,44px);margin-bottom:14px}
+#work .case p{margin-bottom:18px;max-width:52ch}
+#work .reach{grid-template-columns:minmax(0,1fr);gap:8px;margin:0}
+#work .reach div{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:16px 18px}
+#work .co{margin-top:clamp(28px,4vw,48px)}
+@media(max-width:760px){#work .case{grid-template-columns:minmax(0,1fr)}}
 /* azulejo */
 @media(min-width:901px){.htop{grid-template-columns:minmax(0,1.3fr) minmax(0,1fr)!important;align-items:stretch!important}}
 .hl{display:flex;flex-direction:column;justify-content:center}
@@ -433,6 +442,8 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .tl .fr svg{width:48%;height:auto;fill:none;stroke:var(--co);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .tl .bk{background:var(--co);color:#fff;padding:12px;text-align:left;gap:6px;transform:rotateY(180deg);font-size:13px;line-height:1.35}
 .tl .bk b{font-size:14px}
+.tl[data-wide]{grid-column:span 2;aspect-ratio:2.07/1}
+@media(min-width:901px) and (max-width:1180px){.tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .tl[aria-pressed=true] .fr{transform:rotateY(-180deg)}
 .tl[aria-pressed=true] .bk{transform:rotateY(0)}
 .tl:hover .fr{background-color:#eef0ff}
@@ -515,7 +526,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   </div>
   <div>
     <span class="lab rv">Off the clock · tap a tile</span>
-    <div class="tiles"><button class="tl rv" style="--i:0" type="button" aria-pressed="false" aria-label="Francesinha: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30h32v8H8z M8 24h32 M10 24c0-8 28-8 28 0 M18 16a6 4 0 1 0 12 0a6 4 0 1 0 -12 0 M12 38v4 M36 38v3"/></svg>Francesinha</span><span class="fc bk"><b>Francesinha</b>Top 1 best food of all time. Best in town: Francesinha Café.</span></button><button class="tl rv" style="--i:1" type="button" aria-pressed="false" aria-label="Beer: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M16 10h16l-2 30H18z M16 10c0-4 16-4 16 0 M19 18h10"/></svg>Beer</span><span class="fc bk"><b>Beer</b>Erdinger Weissbier first, then a classic Super Bock.</span></button><button class="tl rv" style="--i:2" type="button" aria-pressed="false" aria-label="Wine: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8h14c0 10-3 14-7 14s-7-4-7-14z M24 22v14 M17 40h14 M17 14h14"/></svg>Wine</span><span class="fc bk"><b>Wine</b>All of it. I don&#39;t pick favourites with wine.</span></button><button class="tl rv" style="--i:3" type="button" aria-pressed="false" aria-label="Cars: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 32l4-8c2-4 6-6 12-6h6c4 0 8 4 10 8l4 1c2 1 2 3 2 5H6z M11 34a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M31 34a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg>Cars</span><span class="fc bk"><b>Cars</b>I drive a BMW, and I&#39;ve worked on the data layer behind every one.</span></button><button class="tl rv" style="--i:0" type="button" aria-pressed="false" aria-label="Gaming: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 18h24c4 0 6 4 7 10s-1 10-4 10-5-5-8-5H17c-3 0-5 5-8 5s-5-4-4-10 3-10 7-10z M15 26v6 M12 29h6 M31 27h.01 M35 30h.01"/></svg>Gaming</span><span class="fc bk"><b>Gaming</b>League of Legends, Valorant, anything competitive. Counting down to GTA 6.</span></button><button class="tl rv" style="--i:1" type="button" aria-pressed="false" aria-label="Cats: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 12l5 8 M36 12l-5 8 M12 12v16c0 8 6 12 12 12s12-4 12-12V12l-8 7h-8z M19 28h.01 M29 28h.01 M22 33l2 2 2-2"/></svg>Cats</span><span class="fc bk"><b>Cats</b>Don&#39;t have one yet. I will absolutely pet yours.</span></button><button class="tl rv" style="--i:2" type="button" aria-pressed="false" aria-label="The gym: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20v8 M12 16v16 M36 16v16 M40 20v8 M12 24h24"/></svg>The gym</span><span class="fc bk"><b>The gym</b>I like working on every part of my life. Training keeps me consistent and clear-headed.</span></button><button class="tl rv" style="--i:3" type="button" aria-pressed="false" aria-label="Porto: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 34h40 M8 34c4-18 28-18 32 0 M4 22h40 M12 22v12 M36 22v12"/></svg>Porto</span><span class="fc bk"><b>Porto</b>Home base. Ask me where to eat.</span></button></div>
+    <div class="tiles"><button class="tl rv" style="--i:0" type="button" aria-pressed="false" aria-label="Francesinha: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 30h32v8H8z M8 24h32 M10 24c0-8 28-8 28 0 M18 16a6 4 0 1 0 12 0a6 4 0 1 0 -12 0 M12 38v4 M36 38v3"/></svg>Francesinha</span><span class="fc bk"><b>Francesinha</b>Top 1 best food of all time. Best in town: Francesinha Café.</span></button><button class="tl rv" style="--i:1" type="button" aria-pressed="false" aria-label="Wine &amp; beer: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M17 8h14c0 10-3 14-7 14s-7-4-7-14z M24 22v14 M17 40h14 M17 14h14"/></svg>Wine &amp; beer</span><span class="fc bk"><b>Wine &amp; beer</b>A curious taster: Portuguese wines and German wheat beers.</span></button><button class="tl rv" style="--i:3" type="button" aria-pressed="false" aria-label="Cars: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M6 32l4-8c2-4 6-6 12-6h6c4 0 8 4 10 8l4 1c2 1 2 3 2 5H6z M11 34a3 3 0 1 0 6 0a3 3 0 1 0 -6 0 M31 34a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg>Cars</span><span class="fc bk"><b>Cars</b>I drive a BMW, and I&#39;ve worked on the data layer behind every one.</span></button><button class="tl rv" style="--i:0" type="button" aria-pressed="false" aria-label="Gaming: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 18h24c4 0 6 4 7 10s-1 10-4 10-5-5-8-5H17c-3 0-5 5-8 5s-5-4-4-10 3-10 7-10z M15 26v6 M12 29h6 M31 27h.01 M35 30h.01"/></svg>Gaming</span><span class="fc bk"><b>Gaming</b>League of Legends, Valorant, anything competitive. Counting down to GTA 6.</span></button><button class="tl rv" style="--i:1" type="button" aria-pressed="false" aria-label="Cats: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M12 12l5 8 M36 12l-5 8 M12 12v16c0 8 6 12 12 12s12-4 12-12V12l-8 7h-8z M19 28h.01 M29 28h.01 M22 33l2 2 2-2"/></svg>Cats</span><span class="fc bk"><b>Cats</b>Don&#39;t have one yet. I will absolutely pet yours.</span></button><button class="tl rv" style="--i:2" type="button" aria-pressed="false" aria-label="The gym: show more"><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 20v8 M12 16v16 M36 16v16 M40 20v8 M12 24h24"/></svg>The gym</span><span class="fc bk"><b>The gym</b>I like working on every part of my life. Training keeps me consistent and clear-headed.</span></button><button class="tl rv" style="--i:3" type="button" aria-pressed="false" aria-label="Porto: show more" data-wide><span class="fc fr"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 34h40 M8 34c4-18 28-18 32 0 M4 22h40 M12 22v12 M36 22v12"/></svg>Porto</span><span class="fc bk"><b>Porto</b>Home base. Ask me where to eat.</span></button></div>
   </div>
 </div></section>
 
@@ -545,48 +556,39 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 <section class="band dark" id="work"><div class="wrap">
   <h2><span class="ln"><span>Selected</span></span><span class="ln" style="--i:1"><span>work</span></span></h2>
-  <p class="lede rv" style="margin:24px 0 clamp(32px,5vw,64px)">Three projects, what they changed, and the tech I used to build them.</p>
-  <div class="works">
-  <div class="wl">
-  <div class="co"><div class="coh"><h3 class="con">BMW</h3><span class="pdur" data-from="2022-06" data-to="2025-10"></span></div><div class="cos">via Critical TechWorks, Porto · Jun 2022 to Oct 2025 · Java backend engineer</div></div>
-  <article class="case">
-    <div class="where">Project · global data layer</div>
-    <h3>FDL-next: the data layer behind every BMW</h3>
-    <p>FDL.Gate translates and routes <b>millions of data records</b> between BMW's global network and its backend systems. I was a core contributor to rebuilding it as <b>FDL-next</b>, cloud-native on AWS and Kubernetes.</p>
+  <p class="lede rv" style="margin:24px 0 clamp(32px,5vw,56px)">What I worked on, and why it mattered.</p>
+  <div class="co rv"><div class="coh"><h3 class="con">BMW</h3><span class="pdur" data-from="2022-06" data-to="2025-10"></span></div><div class="cos">via Critical TechWorks, Porto · Jun 2022 to Oct 2025 · Java backend engineer</div></div>
+  <article class="case rv">
+    <div class="cmain">
+      <div class="where">Cloud migration</div>
+      <h3>The data hub behind every BMW</h3>
+      <p>Every BMW car, dealer and workshop in the world sends data through this system. I helped move it to the cloud so it can keep growing without breaking.</p>
+      <div class="chips"><span class="chip">Java</span><span class="chip">Spring</span><span class="chip">Kafka</span><span class="chip">AWS</span><span class="chip">Kubernetes</span></div>
+    </div>
     <div class="reach"><div><b>Every car</b><span>worldwide</span></div><div><b>Every dealer</b><span>worldwide</span></div><div><b>Every workshop</b><span>worldwide</span></div></div>
-    <div class="learn">Tech I worked with here</div>
-    <div class="chips"><span class="chip">Java</span><span class="chip">Spring</span><span class="chip">Quarkus</span><span class="chip">Kafka</span><span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Terraform</span><span class="chip">Jenkins</span><span class="chip">GitHub Actions</span><span class="chip">SQL / NoSQL</span><span class="chip">Prometheus</span><span class="chip">Grafana</span><span class="chip">AKHQ</span><span class="chip">Scrum</span></div>
-    <div class="mini draw mi" data-d="fdl"></div>
   </article>
-  <div class="co"><div class="coh"><h3 class="con">Flutter UK&amp;I</h3><span class="pdur" data-from="2025-10"></span></div><div class="cos">via Blip.pt, Porto · Oct 2025 to now · Software engineer · 2 projects</div></div>
-  <article class="case">
-    <div class="where">Project 1 · platform replacement</div>
-    <h3>GBP-EVO: bringing a core betting platform in-house</h3>
-    <p>Flutter's brands (Sky Bet, Paddy Power, Betfair) relied on OpenBet, an external platform. GBP-EVO <b>replaces it with in-house services</b> to <b>cut third-party costs</b> and take full control of a business-critical system.</p>
-    <div class="reach"><div><b>Lower costs</b><span>no vendor platform</span></div><div><b>Full control</b><span>in-house services</span></div><div><b>Money-grade</b><span>correct and auditable</span></div></div>
-    <div class="learn">Tech I worked with here</div>
-    <div class="chips"><span class="chip">Java</span><span class="chip">Scala</span><span class="chip">Spring Boot</span><span class="chip">Kafka</span><span class="chip">gRPC</span><span class="chip">event-driven design</span><span class="chip">OpenTelemetry</span><span class="chip">Datadog</span><span class="chip">AWS</span><span class="chip">spec-driven dev</span></div>
-    <div class="mini draw mi" data-d="evo"></div>
+
+  <div class="co rv"><div class="coh"><h3 class="con">Flutter UK&amp;I</h3><span class="pdur" data-from="2025-10"></span></div><div class="cos">via Blip.pt, Porto · Oct 2025 to now · Software engineer</div></div>
+  <article class="case rv">
+    <div class="cmain">
+      <div class="where">Platform replacement</div>
+      <h3>Bringing a betting platform in-house</h3>
+      <p>Sky Bet, Paddy Power and Betfair relied on an outside provider for a core part of the business. We&#39;re replacing it with our own technology, to cut costs and gain full control.</p>
+      <div class="chips"><span class="chip">Java</span><span class="chip">Scala</span><span class="chip">Kafka</span><span class="chip">gRPC</span><span class="chip">Datadog</span></div>
+    </div>
+    <div class="reach"><div><b>Lower costs</b><span>no outside provider</span></div><div><b>Full control</b><span>our own technology</span></div><div><b>Built for money</b><span>accurate and auditable</span></div></div>
   </article>
-  <article class="case">
-    <div class="where">Project 2 · group-wide security</div>
-    <h3>Security and modernisation for every service</h3>
-    <p>I built automation that <b>reports vulnerabilities across the group</b> and <b>upgrades dependencies automatically</b>, plus tooling that lets any team adopt it in minutes.</p>
-    <div class="reach"><div><b>Fewer vulns</b><span>found and fixed early</span></div><div><b>Up to date</b><span>automatic upgrades</span></div><div><b>Easy to adopt</b><span>minutes per team</span></div></div>
-    <div class="learn">Tech I worked with here</div>
-    <div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Maven</span><span class="chip">Python</span><span class="chip">Ansible</span><span class="chip">Terraform</span><span class="chip">DevSecOps</span><span class="chip">CI/CD</span></div>
-    <div class="mini draw mi" data-d="health"></div>
+
+  <article class="case rv">
+    <div class="cmain">
+      <div class="where">Security</div>
+      <h3>Keeping every service safe and up to date</h3>
+      <p>I built automation that spots security risks across the whole company and keeps software up to date on its own, so every team stays protected without extra work.</p>
+      <div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Maven</span><span class="chip">Python</span><span class="chip">Terraform</span></div>
+    </div>
+    <div class="reach"><div><b>Safer</b><span>risks found early</span></div><div><b>Up to date</b><span>updates on autopilot</span></div><div><b>Easy</b><span>minutes to adopt</span></div></div>
   </article>
-  </div>
-  <div class="wr" aria-hidden="true"><div class="stick"><div class="cnt"><span id="cn">1 / 3</span><span class="tr"><i id="ct"></i></span></div><div class="frames" id="frames"></div></div></div>
-  </div>
-  <h3 class="rv" style="margin-top:clamp(40px,6vw,80px)">Next on the bench</h3>
-  <div class="next">
-    <div class="slot rv" style="--i:0"><div class="st">in progress</div><h3>Event-driven service with an LLM assistant</h3><p>A distributed system you can run locally, with a chat interface over its live data.</p></div>
-    <div class="slot rv" style="--i:1"><div class="st">planned</div><h3>Platform automation toolkit</h3><p>An open-source take on the CI/CD and dependency-health tooling I build at work.</p></div>
-    <div class="slot rv" style="--i:2"><div class="st">planned</div><h3>MCP server for ops</h3><p>Letting an AI agent read traces and metrics safely to help triage incidents.</p></div>
-  </div>
-  <p class="note">These three are upcoming personal projects; write-ups and code will land here.</p>
+
 </div></section>
 
 
@@ -651,37 +653,24 @@ const TL=[["Languages",["Java 8 to 21+","Scala","Python","SQL"]],["Frameworks",[
 $("tl").innerHTML=TL.map(([h,c],i)=>`<div class="rv" style="--i:${i%3}"><h3>${h}</h3><div class="chips">${c.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`).join("");markChips&&setTimeout(()=>markChips(),0);
 
 /* ---------- case diagrams ---------- */
-const box=(x,y,w,h,t,a)=>`<rect class="${a?"a":"w"}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${h/2}"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle">${t}</text>`;
-const ln=(x1,y1,x2,y2,c)=>`<line class="${c?"lc":"ln2"}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
-const D={
- fdl:()=>["cars","dealers","workshops"].map((t,i)=>ln(96,64+i*70,128,138)+box(8,46+i*70,88,36,t)).join("")+ln(208,138,236,92)+ln(208,138,236,190,1)+box(128,116,80,44,"router")+`<rect class="g" x="236" y="72" width="76" height="40" rx="20"/><text x="274" y="96" text-anchor="middle">FDL.Gate</text>`+box(236,168,76,44,"FDL-next",1)+[0,1,2].map(i=>ln(312,190,334,60+i*80,1)+box(334,42+i*80,60,34,"api "+(i+1))).join("")+`<text class="cap" x="200" y="262" text-anchor="middle">canonical model + adapters</text>`,
- evo:()=>box(10,118,80,40,"brands")+ln(90,138,128,138,1)+box(128,104,92,68,"ACL",1)+`<rect class="g" x="250" y="22" width="132" height="40" rx="20"/><text x="316" y="46" text-anchor="middle" style="text-decoration:line-through">OpenBet</text>`+`<line class="ln2" x1="220" y1="122" x2="250" y2="44" stroke-dasharray="4 5"/>`+[0,1,2].map(i=>ln(220,140,250,100+i*58,1)+box(250,82+i*58,132,36,"in-house "+(i+1),i===0)).join("")+`<text class="cap" x="174" y="262" text-anchor="middle">replace capability by capability</text>`,
- health:()=>[0,1,2,3,4].map(i=>ln(92,40+i*46,128,138)+box(10,24+i*46,82,32,"svc-"+(i+1))).join("")+box(128,112,96,52,"workflows",1)+ln(224,138,256,70,1)+ln(224,138,256,138,1)+ln(224,138,256,206,1)+box(256,52,130,36,"vuln report")+box(256,120,130,36,"bump PRs")+box(256,188,130,36,"risk per svc")+`<text class="cap" x="200" y="262" text-anchor="middle">paved road, adopted in minutes</text>`};
-const tags={fdl:"bmw / global data layer",evo:"flutter / in-house platform",health:"group / security automation"};
-$("frames").innerHTML=["fdl","evo","health"].map((d,i)=>`<div class="frame${i===0?" on":""}"><div class="mini draw${i===0?" in":""}" data-d="${d}"></div><span class="tag">${tags[d]}</span></div>`).join("");
-document.querySelectorAll(".mini").forEach(m=>{m.innerHTML=`<svg viewBox="0 0 400 276" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Architecture sketch">${D[m.dataset.d]()}</svg>`;m.querySelectorAll("line,path").forEach(l=>{try{l.style.setProperty("--L",Math.ceil(l.getTotalLength())+2)}catch(_){}})});
-
 /* ---------- scroll engine ---------- */
 const big=$("big");big.querySelectorAll(".l1,.l2").forEach(L=>{const parts=L.textContent.split('"');L.innerHTML=parts.map((t,i)=>{const ws=t.split(" ");return ws.map((w,j)=>(w?`<span class="w${i%2?" c":""}">${w}</span>`:"")+(j<ws.length-1?(w==="I"?"&nbsp;":" "):"")).join("")}).join("")});
 const WD=[...big.querySelectorAll(".w")];
 const pinP=el=>{const r=el.getBoundingClientRect();return cl(-r.top/(r.height-innerHeight),0,1)};
 const cw=$("cw"),ct=$("contact"),hint=cw.querySelector(".chint"),prog=$("prog");
-const cases=[...document.querySelectorAll(".wl .case")],frs=[...document.querySelectorAll(".frame")],cn=$("cn"),ctr=$("ct");
+
 const hs=$("career"),trk=$("track"),chs=[...trk.querySelectorAll(".ch")],yr=$("yr"),li=$("li");
 let act=-1,dist=0;
-const setAct=i=>{if(i===act)return;act=i;cases.forEach((c,j)=>c.classList.toggle("act",j===i));frs.forEach((f,j)=>{f.classList.toggle("on",j===i);f.classList.toggle("past",j<i);if(j===i)f.querySelector(".draw").classList.add("in")});cn.textContent=(i+1)+" / "+cases.length};
 const sizeHS=()=>{dist=Math.max(0,trk.scrollWidth-innerWidth);hs.style.height=(Math.max(dist,innerHeight*.9)+innerHeight*1.1)+"px"};
 let tk=false;
 const frame=()=>{tk=false;const H=document.documentElement.scrollHeight-innerHeight;prog.style.transform=`scaleX(${H>0?scrollY/H:0})`;
  const hp=cl(scrollY/innerHeight,0,1);big.style.transform=`translateY(${-hp*60}px)`;big.style.opacity=1-hp*.6;
- let best=0,bd=1e9;cases.forEach((c,i)=>{const r=c.getBoundingClientRect(),d=Math.abs(r.top+r.height/2-innerHeight/2);if(d<bd){bd=d;best=i}});setAct(best);
- const wl=document.querySelector(".wl").getBoundingClientRect();ctr.style.transform=`scaleX(${cl((innerHeight/2-wl.top)/wl.height,0,1)})`;
  const hp2=Math.min(1,pinP(hs)/.88);trk.style.transform=`translateX(${-hp2*dist}px)`;li.style.transform=`scaleX(${hp2})`;
  const ys=chs.map(c=>c.dataset.y==="now"?NOW.getFullYear()+NOW.getMonth()/12:+c.dataset.y),xs=chs.map(c=>c.offsetLeft),ax=xs[0]+hp2*(xs[xs.length-1]-xs[0]);chs.forEach((c,i)=>c.classList.toggle("on",xs[i]<=ax+.5));
  let yv=ys[0];for(let i=0;i<chs.length;i++){if(xs[i]<=ax+.5){yv=ys[i];if(i+1<chs.length&&xs[i+1]>ax)yv=ys[i]+(ys[i+1]-ys[i])*cl((ax-xs[i])/(xs[i+1]-xs[i]),0,1)}}
  const yt=String(Math.floor(yv+1e-6));if(yr.textContent!==yt)yr.textContent=yt;
  const cp=pinP(cw);ct.style.setProperty("--r",(cl(cp*1.6,0,1)*150).toFixed(1)+"%");ct.style.setProperty("--o",cl((cp-.45)*3,0,1).toFixed(3));hint.style.opacity=1-cl(cp*4,0,1)};
-if(red){WD.forEach(w=>w.classList.add("on"));setAct(0);chs.forEach(c=>c.classList.add("on"))}
+if(red){WD.forEach(w=>w.classList.add("on"));chs.forEach(c=>c.classList.add("on"))}
 else{sizeHS();addEventListener("scroll",()=>{if(!tk){tk=true;requestAnimationFrame(frame)}},{passive:true});addEventListener("resize",()=>{sizeHS();frame()});frame()}
 
 $("copy").onclick=async e=>{const t=e.currentTarget.querySelector("span");try{await navigator.clipboard.writeText("filipecosta45232@gmail.com");t.textContent="Copied"}catch(_){t.textContent="Select it above"}setTimeout(()=>t.textContent="Copy email",2400)};
