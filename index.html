@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Filipe Costa</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%232433ff'/><rect x='18' y='14' width='9' height='36' fill='white'/><rect x='18' y='14' width='26' height='9' fill='white'/><rect x='18' y='29' width='20' height='8' fill='white'/><circle cx='45' cy='46' r='5' fill='white'/></svg>">
+<meta name="theme-color" content="#2433ff">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE  occasion: a personal site with an art-directed feel; stark, confident, few words
+   IDEA   a production system you can operate: boot log, live architecture, failure drills, a career that scrolls like a timeline
+   PICTURE a full system-design simulator with scenarios (spike, stampede, outage, duplicates) and a live trace band
+   COLOUR pure white ground, pure black ink, one electric cobalt #2433ff; red only for failure, amber for retries
+   TYPE   Archivo expanded 800 for display, Archivo for text, JetBrains Mono for system bits
+   LAYOUT giant name, pinned statement, simulator full width, sticky case studies, horizontal career rail, cobalt contact */
+:root{color-scheme:light;--bg:#fff;--ink:#000;--mute:#5b5b66;--line:#e3e3e8;--co:#2433ff;--red:#ff3b30;--amb:#f5a400;--mono:"JetBrains Mono",ui-monospace,monospace;--disp:"Archivo",system-ui,sans-serif;--ease:cubic-bezier(.16,1,.3,1)}
+*{box-sizing:border-box;min-width:0}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 var(--disp);overflow-x:clip}
+a{color:inherit}
+::selection{background:var(--co);color:#fff}
+h1,h2,h3{font-family:var(--disp);font-stretch:125%;font-weight:800;letter-spacing:-.035em;line-height:.95;margin:0}
+h2{font-size:clamp(44px,7.4vw,108px)}
+h3{font-size:clamp(22px,2.2vw,28px);letter-spacing:-.02em;line-height:1.1}
+p{margin:0 0 14px;max-width:62ch}
+.wrap{max-width:1320px;margin:0 auto}
+.band{padding:clamp(64px,10vw,150px) max(5vw,16px)}
+.dark{background:#000;color:#fff;--mute:#a2a2ad;--line:#26262c}
+.lede{font-size:clamp(18px,1.6vw,21px);color:var(--mute);max-width:58ch}
+
+#prog{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--co);transform-origin:left;transform:scaleX(0);z-index:30}
+#boot{position:fixed;inset:0;z-index:50;background:#000;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:max(5vw,20px);font:14px/1.8 var(--mono);transition:transform 1s var(--ease)}
+#boot.done{transform:translateY(-100%)}
+#boot .lines span{display:block;opacity:0;animation:fin .3s forwards}
+#boot .ok{color:#7f8aff}
+#boot .pct{font:800 clamp(80px,22vw,300px)/.8 var(--disp);font-stretch:125%;letter-spacing:-.05em;align-self:flex-end}
+@keyframes fin{to{opacity:1}}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:20;padding:0 max(5vw,16px);mix-blend-mode:difference;color:#fff}
+nav .wrap{display:flex;align-items:center;gap:26px;min-height:68px;flex-wrap:wrap}
+.brand{font:600 15px var(--mono);text-decoration:none;margin-right:auto}
+nav a.l{text-decoration:none;font-size:15px;padding:8px 0;position:relative}
+nav a.l::after{content:"";position:absolute;left:0;right:0;bottom:4px;height:1.5px;background:currentColor;transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+nav a.l:hover::after{transform:scaleX(1);transform-origin:left}
+
+.btn{display:inline-flex;align-items:center;gap:10px;min-height:52px;padding:0 26px;border-radius:999px;font:600 16px var(--disp);text-decoration:none;border:1.5px solid currentColor;background:transparent;color:inherit;cursor:pointer;position:relative;overflow:hidden;isolation:isolate;transition:color .4s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;background:var(--co);transform:translateY(101%);transition:transform .45s var(--ease);z-index:-1}
+.btn:hover{color:#fff;border-color:var(--co)}.btn:hover::before{transform:none}
+.btn.p{background:var(--co);border-color:var(--co);color:#fff}
+.btn.p::before{background:#000}
+:focus-visible{outline:3px solid var(--co);outline-offset:3px}
+
+.hero{overflow:clip;padding-top:clamp(110px,14vw,170px);padding-bottom:40px}
+.name{font-size:clamp(64px,15.5vw,236px);line-height:.82;letter-spacing:-.055em}
+.ln{display:block;overflow:hidden;padding-bottom:.04em}
+.ln>span{display:inline-block}
+@media(min-width:761px){.name .ln+.ln{text-align:right}}
+.htop{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:clamp(28px,4vw,72px);align-items:end}
+.facts{border-top:2px solid #000}
+.js .fw{opacity:.08;filter:blur(8px);transform:translateY(.25em);transition:opacity 1.6s var(--ease),filter 1.6s var(--ease),transform 1.6s var(--ease)}
+.js .fw.on{opacity:1;filter:none;transform:none}
+.facts>div{padding:16px 0;border-bottom:1px solid var(--line)}
+.f1 b{display:block;font:800 clamp(44px,4.6vw,72px)/1 var(--disp);font-stretch:112%;letter-spacing:-.04em;color:var(--co)}
+.f1>span{display:block;margin-top:6px;color:var(--mute);font-size:16px}
+.fl{display:block;font:13px var(--mono);color:var(--mute);margin-bottom:6px}
+.fs{font-size:clamp(17px,1.35vw,19px);font-weight:600;line-height:1.4}
+.sub{display:flex;gap:16px 28px;align-items:center;flex-wrap:wrap;margin-top:clamp(28px,3.4vw,44px)}
+.role{color:var(--mute);font-size:clamp(18px,1.6vw,22px);line-height:1.35;margin:0;max-width:30ch;letter-spacing:-.01em}
+.role b{color:var(--co);font-weight:600}
+.cta{display:flex;gap:12px;flex-wrap:wrap}
+.status{font:14px var(--mono);color:var(--mute);order:2}
+.status i{display:inline-block;width:9px;height:9px;border-radius:50%;background:#18c26b;margin-right:8px;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.marq{background:var(--co);color:#fff;overflow:hidden;white-space:nowrap;padding:18px 0;font:700 clamp(22px,3vw,40px)/1 var(--disp);font-stretch:125%;letter-spacing:-.02em}
+.marq div{display:inline-block;animation:mq 38s linear infinite}
+.marq span{padding:0 .6em}
+.marq span:nth-child(even){font-weight:400;opacity:.6}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+.stmt{position:relative;height:220vh}
+.pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;align-items:center;padding:0 max(5vw,16px);overflow:hidden}
+.big{font:800 clamp(42px,6.2vw,104px)/.98 var(--disp);font-stretch:112%;letter-spacing:-.04em;margin:0;text-wrap:balance}
+.who{display:flex;gap:10px 18px;flex-wrap:wrap;align-items:baseline;margin:0 0 clamp(22px,3vw,40px);font:14px var(--mono);color:var(--mute);max-width:none}
+.who b{color:var(--ink);font-weight:600}
+.hero{min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-top:110px}
+.hero>.wrap{width:100%}
+.big .w{display:inline-block;color:var(--ink);opacity:.08;filter:blur(8px);transform:translateY(.25em);transition:opacity 1.6s var(--ease),filter 1.6s var(--ease),transform 1.6s var(--ease)}
+.big .l1{display:block;max-width:15ch}
+.big .l2{display:block;margin-top:clamp(22px,3vw,40px);font-size:clamp(20px,2.1vw,30px);font-weight:500;font-stretch:100%;letter-spacing:-.015em;line-height:1.35;color:var(--mute);max-width:34ch}
+.big .l2 .w{color:var(--mute)}
+.big .hl{white-space:nowrap}
+.big .w.on{opacity:1;filter:none;transform:none}
+.big .w.c{color:var(--co)}
+
+/* teaser + player */
+.teaser{margin-top:clamp(32px,5vw,64px);background:#000;color:#fff;border-radius:28px;padding:clamp(28px,4vw,56px);display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:center}
+.tzh{font:800 clamp(28px,3.4vw,50px)/1.02 var(--disp);font-stretch:112%;letter-spacing:-.035em;margin:0 0 18px;text-wrap:balance}
+.tzp{color:#a2a2ad;margin-bottom:28px}
+.play{display:inline-flex;align-items:center;gap:16px;min-height:64px;padding:0 30px 0 12px;border:0;border-radius:999px;background:var(--co);color:#fff;font:700 18px var(--disp);cursor:pointer;transition:transform .4s var(--ease),background .3s}
+.play:hover{transform:scale(1.04);background:#3b49ff}
+.pi{width:44px;height:44px;border-radius:50%;background:#fff;position:relative;flex:none}
+.pi::after{content:"";position:absolute;left:17px;top:13px;border-left:14px solid var(--co);border-top:9px solid transparent;border-bottom:9px solid transparent}
+.tzl{list-style:none;margin:0;padding:0;counter-reset:c;font:14px/1.5 var(--mono);color:#a2a2ad;columns:2;column-gap:24px}
+.tzl li{padding:7px 0;border-top:1px solid #26262c;break-inside:avoid}
+.tzl li.b{color:#ff8a82}
+body.lock{overflow:hidden}
+.pl{position:fixed;inset:0;z-index:60;background:#fff;display:grid;grid-template-rows:auto minmax(0,1fr) auto;animation:plin .6s var(--ease)}
+.pl[hidden]{display:none}
+@keyframes plin{from{opacity:0;transform:scale(.98)}}
+.plt{display:flex;align-items:center;gap:16px;padding:14px max(3vw,16px);border-bottom:1px solid var(--line)}
+.pln{font:600 15px var(--mono);white-space:nowrap}
+.plc{font:13.5px var(--mono);color:var(--mute);margin-right:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.xc{width:48px;height:48px;border-radius:50%;border:0;background:var(--co);color:#fff;font-size:26px;line-height:1;cursor:pointer;flex:none}
+.xc:hover{background:#000}
+.plm{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,400px);min-height:0}
+.plf{position:relative;min-height:0;background:#fff;background-image:radial-gradient(#dedee5 1px,transparent 1px);background-size:22px 22px}
+.plf>svg{position:absolute;inset:0;width:100%;height:100%}
+.plx{border-left:1px solid var(--line);padding:clamp(20px,2.4vw,36px);display:flex;flex-direction:column;overflow:auto}
+.plx .sk{font:13.5px var(--mono);color:var(--co);margin-bottom:12px}
+.plx h3{font-size:clamp(26px,2.4vw,38px);line-height:1.02;letter-spacing:-.03em;margin-bottom:14px;text-wrap:balance}
+.plx h3.bad{color:var(--red)}
+.uw{margin-top:18px;padding:14px 16px;border-radius:14px;background:#eef0ff;font-size:15px;line-height:1.45}
+.uw b{display:block;font:600 12.5px var(--mono);color:var(--co);margin-bottom:4px}
+.plx p{color:var(--mute);font-size:16px}
+.plx .sdlog{position:static;width:auto;margin-top:auto;border:0;border-top:1px solid var(--line);border-radius:0;padding:12px 0 0;background:none;min-height:96px}
+.plb{display:flex;align-items:center;gap:10px;padding:12px max(3vw,16px) max(14px,env(safe-area-inset-bottom));border-top:1px solid var(--line)}
+.cb{width:48px;height:48px;border-radius:50%;border:0;background:var(--co);color:#fff;cursor:pointer;display:grid;place-items:center;flex:none}
+.cb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.cb:hover{background:#000}
+.cb.pp{width:56px;height:56px;background:#000;color:#fff}
+.cb.pp:hover{background:var(--co)}
+.cb.pp svg{fill:currentColor;stroke:none}
+.segs{flex:1;display:flex;gap:4px;margin-left:10px;align-items:center}
+.seg{flex:1;height:28px;border:0;background:none;padding:0;cursor:pointer;position:relative}
+.seg::before{content:"";position:absolute;left:0;right:0;top:12px;height:4px;border-radius:2px;background:#e3e3e8}
+.seg.b::before{background:#ffd9d6}
+.seg i{position:absolute;left:0;top:12px;height:4px;border-radius:2px;background:var(--co);width:0}
+.seg.b i{background:var(--red)}
+.seg:hover::before{background:#c9cdfb}
+.seg:focus-visible{outline-offset:1px}
+.plh{position:absolute;left:16px;top:12px;font:12.5px var(--mono);color:var(--mute);pointer-events:none;z-index:1}
+.endc{position:absolute;inset:0;z-index:4;display:grid;place-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(4px);animation:fin .4s}
+.endc[hidden]{display:none}
+.endb{background:#000;color:#fff;border-radius:24px;padding:28px 30px;text-align:center;width:min(380px,calc(100% - 32px));animation:pop .5s var(--ease)}
+@keyframes pop{from{transform:scale(.9);opacity:0}}
+.endt{font:800 clamp(24px,2.4vw,32px)/1.05 var(--disp);font-stretch:112%;letter-spacing:-.03em;margin:0 auto 6px}
+.ends{color:#a2a2ad;font-size:15px;margin:0 auto 22px}
+.endbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.eb{display:inline-flex;align-items:center;gap:8px;min-height:52px;padding:0 22px;border-radius:999px;border:0;background:var(--co);color:#fff;font:700 16px var(--disp);cursor:pointer}
+.eb:hover{background:#3b49ff}
+.eb.x2{background:#fff;color:#000}.eb.x2:hover{background:#e3e3e8}
+.eb svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.plf .nd{transition:opacity .7s var(--ease);cursor:pointer}
+.plf .nd:hover rect.m,.plf .nd.open rect.m{stroke:var(--co);stroke-width:3}
+.plf .nd:focus{outline:none}.plf .nd:focus-visible rect.m{stroke:var(--co);stroke-width:3}
+.plf .nd.hid{opacity:0;pointer-events:none}
+.plf .nd.dim{opacity:.28}
+.plf .edge{transition:opacity .7s}
+.plf .edge.hid{opacity:0}.plf .edge.dim{opacity:.2}
+.plf .zone{transition:opacity .7s}.plf .zone.hid,.plf .zl.hid{opacity:0}
+@media(max-width:900px){.teaser{grid-template-columns:minmax(0,1fr)}.plm{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1.7fr) minmax(0,1fr)}.plt{padding:8px 14px}.plf .v .nd text{font-size:11px}.plf .v .nd text.s{display:none}.plx{border-left:0;border-top:1px solid var(--line);padding:16px}.plx h3{font-size:24px}.plx p{font-size:15px}.plx .sdlog{display:none}.segs{gap:3px;margin-left:4px}.cb{width:40px;height:40px}.cb.pp{width:46px;height:46px}}
+@media(max-width:520px){.tzl{columns:1}}
+/* scroll story */
+.story{position:relative;height:1300vh}
+.spin{position:sticky;top:0;height:100vh;height:100svh;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(20px,3vw,48px);padding:90px max(5vw,16px) 40px;max-width:1420px;margin:0 auto;align-items:center}
+.sc{align-self:center}
+.sbar{height:3px;background:var(--line);margin-bottom:28px;max-width:320px;border-radius:2px;overflow:hidden}
+.sbar i{display:block;height:100%;background:var(--co);transform-origin:left;transform:scaleX(0)}
+.sk{font:13.5px var(--mono);color:var(--co);margin-bottom:14px}
+.sc h3{font-size:clamp(34px,4.2vw,64px);line-height:1;letter-spacing:-.035em;margin-bottom:18px;text-wrap:balance}
+.sc h3.bad{color:var(--red)}
+.sc p{color:var(--mute);font-size:clamp(17px,1.4vw,20px);max-width:40ch}
+.sfig{position:relative;height:100%;min-height:0;border:1.5px solid #000;border-radius:24px;overflow:hidden;background:#fff;background-image:radial-gradient(#dedee5 1px,transparent 1px);background-size:22px 22px}
+.sfig>svg{position:absolute;inset:0;width:100%;height:100%}
+.sfig .nd{opacity:0;transform:scale(.6);transform-box:fill-box;transform-origin:center;transition:opacity .6s var(--ease),transform .8s var(--ease)}
+.sfig .nd.vis{opacity:1;transform:none}
+.sfig .edge{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 1s var(--ease)}
+.sfig .edge.vis{stroke-dashoffset:0}
+.sfig .bdg{animation:fin .4s}
+@media(max-width:900px){.spin{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);padding:76px 16px 16px;gap:14px;align-items:stretch}.sc h3{font-size:clamp(28px,8vw,40px);margin-bottom:10px}.sc p{font-size:16px;margin-bottom:10px}.sbar{margin-bottom:14px}.hood span{font-size:12px;padding:5px 10px}}
+/* system design simulator */
+.sdw{position:relative}
+.ro{position:absolute;left:28px;top:24px;z-index:2;pointer-events:none;max-width:60%}
+.ro1{font:800 clamp(30px,3.6vw,54px)/1 var(--disp);font-stretch:112%;letter-spacing:-.035em;transition:opacity .4s,transform .6s var(--ease)}
+.ro2{font:14px var(--mono);color:var(--mute);margin-top:10px}
+.ro.out .ro1{opacity:0;transform:translateY(12px)}
+.sd .hint{position:absolute;left:18px;bottom:62px;font:13px var(--mono);color:var(--mute);pointer-events:none}
+.pop{position:absolute;right:16px;top:16px;width:min(320px,calc(100% - 32px));background:#000;color:#fff;border-radius:16px;padding:16px 18px;font-size:14.5px;line-height:1.5;z-index:3}
+.pop b{display:block;font:700 18px var(--disp);margin-bottom:6px}
+.pop .t{font:12px var(--mono);color:#9aa0ff;display:block;margin-top:8px}
+.pop button{position:absolute;right:8px;top:8px;width:36px;height:36px;border:0;background:none;color:#fff;font-size:20px;cursor:pointer;border-radius:50%}
+.hood{display:flex;flex-wrap:wrap;gap:8px}
+.tk{cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.chip.tk:hover,.chip.tk.open{background:var(--co);color:#fff;border-color:var(--co)}
+.hood span.tk:hover,.hood span.tk.open{background:var(--co)}
+.tip{position:fixed;z-index:80;background:#000;color:#fff;border-radius:14px;padding:12px 14px;font-size:14.5px;line-height:1.45;box-shadow:0 10px 30px rgba(0,0,0,.18);animation:pop .25s var(--ease)}
+.tip[hidden]{display:none}
+.tip b{display:block;font:600 13px var(--mono);color:#9aa0ff;margin-bottom:4px}
+.hood span{font:13.5px var(--mono);padding:7px 12px;border-radius:999px;background:#000;color:#fff}
+.scen{display:flex;flex-wrap:wrap;gap:8px;margin:clamp(28px,4vw,44px) 0 16px}
+.scen button{min-height:44px;padding:0 18px;border-radius:999px;border:1.5px solid #000;background:#fff;color:#000;font:600 15px var(--disp);cursor:pointer;transition:background .3s,color .3s}
+.scen button:hover{background:#eef0ff}
+.scen button[aria-pressed=true]{background:#000;color:#fff}
+.scen button[aria-pressed=true].f{background:var(--red);border-color:var(--red)}
+.sd{position:relative;height:640px;border:1.5px solid #000;border-radius:24px;overflow:hidden;background:#fff;background-image:radial-gradient(#dedee5 1px,transparent 1px);background-size:22px 22px}
+.sd>svg{position:absolute;inset:0;width:100%;height:100%}
+.zone{fill:#f4f5ff;stroke:#c9cdfb;stroke-width:1;stroke-dasharray:3 5}
+.zl{font:12px var(--mono);fill:#6b72d9}
+.edge{stroke:#000;stroke-width:1.4}
+.edge.d{stroke:#a7a7b2;stroke-dasharray:4 6}
+.nd{cursor:pointer}
+.nd rect{fill:#fff;stroke:#000;stroke-width:1.5;transition:fill .3s,stroke .3s}
+.nd .rep{fill:#fff;stroke:#9a9aa6}
+.nd text{fill:#000;font:700 15px var(--disp);text-anchor:middle;pointer-events:none}
+.nd text.s{fill:var(--mute);font:400 12px var(--mono)}
+.nd:hover rect.m{fill:#eef0ff}
+.nd.sel rect.m{stroke:var(--co);stroke-width:3}
+.nd.hot rect.m{fill:var(--co);stroke:var(--co)}.nd.hot text{fill:#fff}
+.nd.warn rect.m{fill:#fff4d6;stroke:var(--amb)}
+.nd.bad rect.m{fill:#ffe5e3;stroke:var(--red)}
+.v .nd text{font-size:12px}.v .nd text.s{font-size:10px}
+.nd:focus{outline:none}.nd:focus-visible rect.m{stroke:var(--co);stroke-width:3}
+.bdg rect{fill:#000}.bdg text{fill:#fff;font:11.5px var(--mono);text-anchor:middle}
+.bdg.r rect{fill:var(--red)}.bdg.a rect{fill:var(--amb)}.bdg.a text{fill:#000}.bdg.c rect{fill:var(--co)}
+.nd rect.bandr{fill:#000;stroke:#000}.nd.sel rect.bandr{stroke:var(--co);stroke-width:3}
+.nd text.bandt{fill:#fff;font:12px var(--mono);text-anchor:start;pointer-events:none}
+.sdlog{position:absolute;right:14px;bottom:62px;font:12px/1.65 var(--mono);color:#000;background:rgba(255,255,255,.92);border:1px solid var(--line);border-radius:10px;padding:8px 12px;width:min(360px,calc(100% - 28px));pointer-events:none}
+.sdlog b{color:var(--co);font-weight:400}.sdlog .e{color:var(--red)}
+.sdx{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);margin-top:28px}
+.sdx .k{font:13.5px var(--mono);color:var(--co);margin-bottom:10px}
+.sdx h3{margin-bottom:12px}
+.sdx p{color:var(--mute);font-size:16.5px}
+.sdx ul{margin:0;padding:0;list-style:none}
+.sdx li{padding:10px 0;border-top:1px solid var(--line);font-size:16px}
+.sdx li b{font-weight:600}
+.dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;margin:0;font-size:16px}
+.dl dt{font:13px var(--mono);color:var(--mute);padding-top:3px}
+.dl dd{margin:0}
+.swap{transition:opacity .25s,transform .4s var(--ease)}
+.swap.out{opacity:0;transform:translateY(8px)}
+
+.areas{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);margin-top:clamp(40px,6vw,80px)}
+.area{padding:32px clamp(14px,1.6vw,28px) 8px 0;border-right:1px solid var(--line)}
+.area+.area{padding-left:clamp(14px,1.6vw,28px)}
+.area:last-child{border-right:0}
+.area .ic{font:13.5px var(--mono);color:var(--co);margin-bottom:28px;display:block}
+.area h3{margin-bottom:14px;font-size:clamp(21px,1.8vw,25px)}
+.area p{color:var(--mute);font-size:16px}
+
+.case .where{font:13.5px var(--mono);color:#a2a2ad;margin-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.co{margin-top:clamp(40px,6vw,72px);padding:clamp(22px,2.6vw,34px);border-radius:24px;background:linear-gradient(135deg,#1a22b8,#0d1260);border:1px solid #2f3ad6}
+.wl .co:first-child{margin-top:0}
+.co .pdur{background:#fff;color:var(--co)}
+.co .cos{color:#c9ceff}
+.co .car .win,.co .car .wh circle{fill:#0d1260}.co .car .arch{fill:#121883}
+.co .bet .slip{fill:#0d1260;stroke:#4a55e6}
+.co .bet .pent,.co .bet .seam{fill:#0d1260;stroke:#0d1260}.co .bet .seam{fill:none}
+.co .car .crs,.co .car .hl,.co .car .spd line{stroke:#fff}.co .car .wh .rim{fill:#fff}
+.co .bet .odd.sel rect{fill:#fff;stroke:#fff;animation:none}.co .bet .odd.sel text{fill:var(--co)}
+.coh{display:flex;align-items:center;flex-wrap:wrap;gap:12px 18px}
+.con{font-size:clamp(40px,5.4vw,80px);line-height:.95;letter-spacing:-.04em}
+.coart{display:block;margin-top:18px;height:clamp(84px,9vw,124px);width:auto;max-width:100%;overflow:visible}
+.car .body{fill:#fff}
+.car .win{fill:#0a0a0c}
+.car .pil{stroke:#fff;stroke-width:3}
+.car .crs{stroke:var(--co);stroke-width:3}
+.car .gnd{stroke:#3a3a44;stroke-width:2}
+.car .arch{fill:#000}
+.car .hl{stroke:var(--co);stroke-width:4;stroke-linecap:round}
+.car .wh circle{fill:#0a0a0c;stroke:#fff;stroke-width:3}
+.car .wh .rim{fill:var(--co);stroke:none}
+.car .spd line{stroke:var(--co);stroke-width:3;stroke-linecap:round;stroke-dasharray:12 40;animation:spd 1.1s linear infinite}
+.car .spd line:nth-child(2){animation-delay:-.4s}.car .spd line:nth-child(3){animation-delay:-.8s}
+@keyframes spd{to{stroke-dashoffset:52}}
+.js .car.rv{transform:translateX(-60px)}.js .car.rv.in{transform:none}
+.bet .ball circle{fill:#fff}
+.bet .pent{fill:#0a0a0c}
+.bet .seam{stroke:#0a0a0c;stroke-width:2.5;fill:none;stroke-linecap:round}
+.bet .ball .bo{fill:none;stroke:#fff;stroke-width:2}
+.bet .ball{transform-box:fill-box;transform-origin:center;animation:roll 6s linear infinite}
+@keyframes roll{to{transform:rotate(360deg)}}
+.bet .slip{fill:#0a0a0c;stroke:#3a3a44;stroke-width:1.5}
+.bet .lbl{fill:#a2a2ad;font:12px var(--mono)}
+.bet .odd rect{fill:none;stroke:#fff;stroke-width:1.5}
+.bet .odd text{fill:#fff;font:600 13px var(--mono);text-anchor:middle}
+.bet .odd.sel rect{fill:var(--co);stroke:var(--co);animation:pulse 2s infinite}
+@media(max-width:600px){.coart{height:76px}}
+@media(prefers-reduced-motion:reduce){.car .spd line,.bet .ball,.bet .odd.sel rect{animation:none}}
+.cos{margin-top:12px;font:14px var(--mono);color:#a2a2ad}
+.pdur{display:inline-flex;align-items:center;min-height:38px;padding:0 16px;border-radius:999px;background:var(--co);color:#fff;font:800 clamp(17px,1.6vw,21px)/1 var(--disp);font-stretch:112%;letter-spacing:-.01em;white-space:nowrap}
+.case h3{font-size:clamp(30px,3.6vw,52px);line-height:1;letter-spacing:-.035em;margin-bottom:22px}
+.case p{color:var(--mute)}
+.case p b{color:#fff;font-weight:600}
+.learn{font:13px var(--mono);color:#7f8aff;margin:4px 0 10px}
+.design{list-style:none;padding:0;margin:18px 0 22px;counter-reset:d}
+.design li{padding:12px 0 12px 0;border-top:1px solid #26262c;font-size:16px;color:#c9c9d2}
+.design li b{display:block;color:#fff;font-weight:600;margin-bottom:2px}
+.reach{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin:22px 0}
+.reach div{background:var(--co);padding:16px 14px;border-radius:4px}
+.reach b{display:block;font:800 clamp(17px,1.8vw,22px)/1.1 var(--disp);font-stretch:112%;color:#fff}
+.reach span{font:13px var(--mono);color:#c9ceff}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chip{font:13.5px var(--mono);padding:5px 11px;border-radius:999px;border:1px solid var(--line);white-space:nowrap}
+.dark .chip{border-color:#3a3a44}
+.mini{border:1px solid #26262c;border-radius:20px;aspect-ratio:16/11;background:#0a0a0c}
+.mini svg{width:100%;height:100%;display:block}
+.mini text{font:12.5px var(--mono);fill:#c8c8d2}
+.mini .w{stroke:#fff;stroke-width:1.4;fill:#0a0a0c}
+.mini .a{stroke:var(--co);fill:var(--co)}
+.mini .a+text{fill:#fff}
+.mini .g{stroke:#55556a;stroke-dasharray:5 6;fill:none}
+.mini .ln2{stroke:#55556a;stroke-width:1.4}
+.mini .lc{stroke:var(--co);stroke-width:2.2}
+.mini .cap{fill:#7f8aff}
+.works{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(32px,6vw,96px)}
+.works .case{min-height:72vh;padding:8vh 0;display:flex;flex-direction:column;justify-content:center;opacity:.28;transition:opacity .6s var(--ease)}
+.works .case.act{opacity:1}
+.wr{position:relative}
+.stick{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;justify-content:center;gap:18px}
+.cnt{font:13.5px var(--mono);color:#a2a2ad;display:flex;align-items:center;gap:14px}
+.cnt .tr{flex:1;height:2px;background:#26262c;position:relative}
+.cnt .tr i{position:absolute;inset:0;background:var(--co);transform-origin:left;transform:scaleX(0)}
+.frames{position:relative;aspect-ratio:16/11}
+.frame{position:absolute;inset:0;clip-path:inset(100% 0 0 0 round 20px);transition:clip-path 1s var(--ease)}
+.frame.on{clip-path:inset(0 0 0 0 round 20px)}
+.frame.past{clip-path:inset(0 0 100% 0 round 20px)}
+.frame .mini{height:100%;aspect-ratio:auto}
+.frame .tag{position:absolute;left:18px;top:16px;font:13px var(--mono);color:#fff;background:var(--co);padding:4px 10px;border-radius:999px}
+.mi{display:none}
+.next{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:28px}
+.slot{border:1.5px dashed #3a3a44;border-radius:20px;padding:24px;min-height:170px;transition:border-color .4s,background .4s}
+.slot:hover{border-color:var(--co);background:#0b0d2a}
+.slot .st{font:13px var(--mono);color:#7f8aff}
+.slot h3{font-size:20px;margin:12px 0 8px}
+.slot p{color:var(--mute);font-size:15px;margin:0}
+.note{font-size:14px;color:var(--mute);margin-top:14px}
+
+/* career rail */
+.hs{position:relative;background:#eef0ff;--line:#cfd3fb}
+.hpin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:flex;flex-direction:column;justify-content:center;padding-top:56px;padding-bottom:24px}
+.hhead{padding:0 max(5vw,16px);display:flex;justify-content:space-between;align-items:end;gap:20px;flex-wrap:wrap}
+.hsub{margin:18px 0 0;color:var(--ink);font:800 clamp(28px,3.6vw,54px)/1 var(--disp);font-stretch:112%;letter-spacing:-.035em;max-width:none}
+.hsub b{display:inline-block;background:var(--co);color:#fff;padding:.08em .28em .12em;border-radius:.22em;margin-right:.18em}
+.hsub span.hs2{display:block;margin-top:10px;font:500 clamp(16px,1.4vw,20px)/1.3 var(--disp);font-stretch:100%;letter-spacing:0;color:var(--mute)}
+.dur{display:inline-block;margin-left:8px;padding:2px 10px;border-radius:999px;background:var(--co);color:#fff;font:600 12.5px var(--mono)}
+.hhead>*{flex:none;max-width:100%}
+.hhead h2.xh{font-size:clamp(36px,5.6vw,88px);line-height:1.05}
+.xh b{display:inline-block;background:var(--co);color:#fff;padding:.02em .22em .08em;border-radius:.18em;font-weight:800}
+.hs2{margin:14px 0 0;color:var(--mute);font-size:clamp(17px,1.5vw,21px)}
+.yr{font:800 clamp(52px,8.5vw,136px)/.8 var(--disp);font-stretch:125%;letter-spacing:-.05em;color:var(--co);font-variant-numeric:tabular-nums}
+.rail{position:relative;margin-top:clamp(28px,5vh,56px)}
+.track{display:flex;gap:clamp(16px,2.4vw,32px);padding:0 max(5vw,16px);width:max-content;will-change:transform}
+.line{position:absolute;left:0;right:0;top:9px;height:2px;background:var(--line)}
+.line i{position:absolute;inset:0;background:var(--co);transform-origin:left;transform:scaleX(0)}
+.ch{width:min(480px,82vw);padding-top:44px;position:relative}
+.ch::before{content:"";position:absolute;top:2px;left:0;width:16px;height:16px;border-radius:50%;background:#eef0ff;border:2px solid #000;transition:background .4s,border-color .4s}
+.ch.on::before{background:var(--co);border-color:var(--co)}
+.ch .when{font:13.5px var(--mono);color:var(--mute);margin-bottom:10px}
+.ch h3{font-size:clamp(28px,3.2vw,44px);margin-bottom:14px}
+.ch p{color:var(--mute);font-size:16.5px}
+.ch.grit h3{color:var(--co)}
+.ch.end{width:min(380px,78vw)}
+.jl{list-style:none;margin:16px 0 0;padding:0}
+.jl li{padding:9px 0 9px 22px;border-top:1px solid var(--line);font-size:16px;position:relative}
+.jl li::before{content:"";position:absolute;left:2px;top:17px;width:8px;height:8px;border-radius:2px;background:var(--co)}
+
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px 28px;margin-top:clamp(36px,5vw,64px)}
+.tools h3{font-size:17px;font-stretch:100%;letter-spacing:0;margin-bottom:12px;padding-top:14px;border-top:1.5px solid #000}
+
+.cwrap{position:relative;height:220vh;background:#000}
+.cpin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.chint{position:absolute;left:0;right:0;top:50%;text-align:center;font:14px var(--mono);color:#a2a2ad;transform:translateY(-50%)}
+.contact{background:var(--co);color:#fff;--mute:#d6d9ff;position:absolute;inset:0;display:flex;align-items:center;clip-path:circle(var(--r,0%) at 50% 55%)}
+.contact>.wrap{width:100%;opacity:var(--o,0);transform:translateY(calc((1 - var(--o,0))*40px))}
+.contact h2{font-size:clamp(56px,11vw,170px);line-height:.85}
+.mail{display:inline-block;font:700 clamp(22px,3.6vw,52px)/1.1 var(--disp);font-stretch:112%;letter-spacing:-.03em;margin:clamp(24px,4vw,44px) 0 26px;text-decoration:none;border-bottom:3px solid currentColor;overflow-wrap:anywhere}
+.mail:hover{border-bottom-color:transparent}
+.contact .btn{border-color:#fff}
+.contact .btn::before{background:#000}
+.contact .btn.p{background:#fff;color:var(--co);border-color:#fff}
+.contact .btn.p:hover{color:#fff}
+.contact .cta{justify-content:flex-start}
+.acts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;max-width:820px}
+.cact{display:flex;align-items:center;justify-content:center;gap:12px;min-height:72px;padding:0 20px;border-radius:999px;border:0;background:#fff;color:var(--co);font:700 19px var(--disp);text-decoration:none;cursor:pointer;transition:background .3s,color .3s,transform .4s var(--ease)}
+.cact:hover{background:#000;color:#fff;transform:translateY(-3px)}
+.cact svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;flex:none}
+@media(max-width:700px){.acts{grid-template-columns:minmax(0,1fr)}}
+.req{font:14px/1.8 var(--mono);color:#d6d9ff;margin-top:30px}
+footer{background:#000;color:#a2a2ad;padding:26px max(5vw,16px);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+.js .rv{opacity:0;transform:translateY(40px);transition:opacity 1s var(--ease),transform 1.1s var(--ease);transition-delay:calc(var(--i,0)*90ms)}
+.js .ln>span{transform:translateY(105%);transition:transform 1.2s var(--ease);transition-delay:calc(var(--i,0)*80ms)}
+.js .ln.in>span{transform:none}
+.js .rv.in{opacity:1;transform:none}
+.js .draw path,.js .draw line{stroke-dasharray:var(--L,600);stroke-dashoffset:var(--L,600);transition:stroke-dashoffset 1.6s var(--ease)}
+.js .draw.in path,.js .draw.in line{stroke-dashoffset:0}
+.js .draw rect,.js .draw text{opacity:0;transition:opacity .6s .3s}
+.js .draw.in rect,.js .draw.in text{opacity:1}
+
+@media(max-width:1100px){.areas{grid-template-columns:repeat(2,minmax(0,1fr))}.area:nth-child(2){border-right:0}.area:nth-child(3){padding-left:0}.area:nth-child(n+3){border-top:1px solid var(--line)}}
+@media(max-width:980px){.tools{grid-template-columns:repeat(2,minmax(0,1fr))}.sdx{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:900px){.works{grid-template-columns:minmax(0,1fr)}.wr{display:none}.works .case{min-height:0;padding:32px 0;opacity:1;border-top:1px solid var(--line)}.co+.case{border-top:0}.mi{display:block;margin-top:24px}.sd{height:760px}.ro{position:static;max-width:none;margin-bottom:16px}.sd .hint{display:none}}
+@media(max-width:900px){.htop{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:760px){.sub{flex-direction:column;align-items:flex-start}.status{order:0}.cta,.status{justify-content:flex-start;text-align:left}.next{grid-template-columns:minmax(0,1fr)}nav a.l.x{display:none}.reach{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.tools,.areas{grid-template-columns:minmax(0,1fr)}.area,.area+.area,.area:nth-child(3){border-right:0;padding-left:0;border-top:1px solid var(--line)}.sdlog{display:none}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}#boot{display:none}.marq div{animation:none}.js .rv,.js .ln>span{transition:none;opacity:1;transform:none}.big .w,.js .fw{transition:none}.js .fw{opacity:1;filter:none;transform:none}.js .draw path,.js .draw line{stroke-dashoffset:0;transition:none}.js .draw rect,.js .draw text{opacity:1}.status i{animation:none}.cwrap{height:auto}.pl{animation:none}.plf .nd,.plf .edge{transition:none}.pin,.cpin{position:relative;height:auto;padding-block:80px}.big .w{color:#000}.contact{position:relative;clip-path:none}.contact>.wrap{opacity:1;transform:none}.chint{display:none}.works .case{opacity:1}.hs{height:auto!important}.hpin{position:relative;height:auto;padding-block:80px}.track{flex-direction:column;width:auto;transform:none!important}.ch,.ch.end{width:auto}.line{display:none}}
+</style>
+<script>document.documentElement.classList.add("js")</script>
+</head>
+<body>
+<div id="prog"></div>
+<div id="boot" aria-hidden="true"><div class="lines" id="bl"></div><div class="pct" id="bp">0</div></div>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top">filipe.costa</a>
+  <a class="l x" href="#career">Experience</a>
+  <a class="l x" href="#design">How I build</a>
+  <a class="l x" href="#work">Work</a>
+  <a class="l" href="#contact">Contact</a>
+</div></nav>
+
+<header class="band hero" id="top"><div class="wrap">
+  <div class="htop">
+    <div>
+      <p class="who rv" style="--i:0"><b>Filipe Costa</b><span>Software Engineer &amp; DevOps, Porto</span></p>
+      <h1 class="big" id="big"><span class="l1">My best work is the outage that "never happened."</span><span class="l2">Millions of bets and every BMW on the road run through systems I helped scale.</span></h1>
+    </div>
+    <aside class="facts" aria-label="At a glance">
+      <div class="f1 fw"><b><span class="xp">5</span> years</b><span>building &amp; maintaining software</span></div>
+      <div class="fw"><span class="fl">Core stack</span><div class="fs">Java 8–21, Spring Boot, Quarkus, Kafka, AWS, Kubernetes, Terraform</div></div>
+      <div class="fw"><span class="fl">Built for</span><div class="fs">BMW (global vehicle data) and Flutter UK&amp;I (Sky Bet, Paddy Power, Betfair)</div></div>
+    </aside>
+  </div>
+  <div class="sub rv" style="--i:8">
+    <div class="status"><i></i>Open to new opportunities</div>
+    <div class="cta"><a class="btn p" href="#contact">Get in touch</a><a class="btn" href="#work">See my work</a></div>
+  </div>
+</div></header>
+
+<div class="marq" aria-hidden="true"><div id="mq"></div></div>
+
+
+
+
+
+<section class="band" id="bring" style="padding-top:clamp(48px,7vw,100px);padding-bottom:clamp(40px,5vw,72px)"><div class="wrap">
+  <h2><span class="ln"><span>What I bring</span></span></h2>
+  <p class="lede rv" style="margin-top:24px"><span class="xp">5</span> years as a Java engineer who owns the whole path: from the API contract to the Kubernetes pod to the alert at 3am.</p>
+  <div class="areas">
+    <div class="area rv" style="--i:0"><span class="ic">/backend</span><h3>Java backend, done properly</h3><p>Java 8 through the latest LTS, Spring Boot and Quarkus microservices. Clean REST and gRPC contracts, JPA done right, concurrency without surprises, and a test pyramid from unit to end-to-end.</p></div>
+    <div class="area rv" style="--i:1"><span class="ic">/distributed</span><h3>Distributed systems</h3><p>Event-driven architectures on Kafka and SQS/SNS. Idempotency, ordering, retries and dead-letter queues: consistency across services without distributed locks.</p></div>
+    <div class="area rv" style="--i:2"><span class="ic">/cloud</span><h3>AWS &amp; DevOps</h3><p>AWS, Docker and Kubernetes, all in Terraform and Ansible. CI/CD with GitHub Actions, Jenkins and GoCD, GitOps deployments with Argo CD, safe rollouts, and pipelines other teams actually want to use.</p></div>
+    <div class="area rv" style="--i:3"><span class="ic">/production</span><h3>Production ownership</h3><p>On-call for the services I build. OpenTelemetry, Datadog, Prometheus and Grafana, performance tuning, incident response, and dependency and vulnerability hygiene across whole fleets of services.</p></div>
+  </div>
+</div></section>
+<section class="hs" id="career"><div class="hpin">
+  <div class="hhead"><div><h2 class="xh"><span class="ln"><span><b><span class="xp">5</span> years</b> of experience</span></span></h2><p class="hs2 rv">building &amp; maintaining software</p></div><div class="yr" id="yr" aria-hidden="true">2018</div></div>
+  <div class="rail"><div class="track" id="track">
+    <div class="ch" data-y="2022.45"><div class="when">Jun 2022 to Oct 2025<span class="dur" data-from="2022-06" data-to="2025-10"></span></div><h3>Java backend engineer, BMW</h3><p>At Critical TechWorks, BMW's Porto tech hub, I helped rebuild the data layer used by every BMW car, dealer and workshop worldwide.</p><ul class="jl"><li>Core contributor to FDL-next, a cloud-native rebuild</li><li>Spring and Quarkus microservices on Kafka</li><li>AWS, Kubernetes and Terraform, end to end</li></ul></div>
+    <div class="ch" data-y="2025.75"><div class="when">Oct 2025 to now<span class="dur" data-from="2025-10"></span></div><h3>Software engineer, Flutter UK&amp;I</h3><p>At Blip, I work on the platforms behind Sky Bet, Paddy Power and Betfair.</p><ul class="jl"><li>GBP-EVO: replacing OpenBet with in-house services</li><li>Group-wide vulnerability and dependency automation</li><li>AI-assisted, spec-driven workflows for the team</li></ul></div>
+    <div class="ch end" data-y="now"><div class="when">What's next</div><h3>Your team?</h3><p>I'm looking for a team with hard problems and high standards.</p><a class="btn p" href="#contact">Get in touch</a></div>
+  </div><div class="line"><i id="li"></i></div></div>
+</div></section>
+<section class="band" id="design" style="padding-top:clamp(40px,5vw,72px)"><div class="wrap">
+  <h2><span class="ln"><span>How I build</span></span></h2>
+  <div class="teaser rv">
+    <div class="tz1">
+      <p class="tzh">Watch a production system get built, then survive four bad days.</p>
+      <p class="tzp">Not every system needs all of this. Watch each piece get added only when it earns its place: edge, services, cache, Postgres, Kafka, consumers and partners. About two minutes, and you can pause or skip at any point.</p>
+      <button class="play" id="open" type="button"><span class="pi" aria-hidden="true"></span>See how I build</button>
+    </div>
+    <ol class="tzl" id="tzl"></ol>
+  </div>
+</div></section>
+
+<section class="band dark" id="work"><div class="wrap">
+  <h2><span class="ln"><span>Selected</span></span><span class="ln" style="--i:1"><span>work</span></span></h2>
+  <p class="lede rv" style="margin:24px 0 clamp(32px,5vw,64px)">Three projects, what they changed, and the tech I used to build them.</p>
+  <div class="works">
+  <div class="wl">
+  <div class="co"><div class="coh"><h3 class="con">BMW</h3><span class="pdur" data-from="2022-06" data-to="2025-10"></span></div><svg class="coart car rv" style="--i:2" viewBox="0 0 340 110" role="img" aria-label="Sports coupe illustration">
+ <g class="spd"><line x1="0" y1="50" x2="40" y2="50"/><line x1="8" y1="66" x2="36" y2="66"/><line x1="2" y1="82" x2="26" y2="82"/></g>
+ <g transform="translate(342,0) scale(-1,1)">
+  <path class="body" d="M28 90 L26 79 Q28 69 46 65 L110 57 Q130 40 160 34 Q192 30 216 41 Q238 51 262 55 L292 58 L298 53 L301 58 Q303 62 303 68 L304 80 L298 90 Z"/>
+  <path class="win" d="M122 57 Q138 43 162 39 Q188 36 206 45 L216 55 Z"/>
+  <line class="pil" x1="178" y1="37" x2="182" y2="56"/>
+  <line class="crs" x1="58" y1="73" x2="294" y2="73"/>
+  <line class="hl" x1="34" y1="70" x2="56" y2="67"/>
+  <circle class="arch" cx="88" cy="86" r="23"/><circle class="arch" cx="252" cy="86" r="23"/>
+  <g class="wh"><circle cx="88" cy="86" r="19"/><circle class="rim" cx="88" cy="86" r="10"/></g>
+  <g class="wh"><circle cx="252" cy="86" r="19"/><circle class="rim" cx="252" cy="86" r="10"/></g>
+ </g>
+ <line class="gnd" x1="40" y1="106" x2="340" y2="106"/>
+</svg><div class="cos">via Critical TechWorks, Porto · Jun 2022 to Oct 2025 · Java backend engineer</div></div>
+  <article class="case">
+    <div class="where">Project · global data layer</div>
+    <h3>FDL-next: the data layer behind every BMW</h3>
+    <p>FDL.Gate translates and routes <b>millions of data records</b> between BMW's global network and its backend systems. I was a core contributor to rebuilding it as <b>FDL-next</b>, cloud-native on AWS and Kubernetes.</p>
+    <div class="reach"><div><b>Every car</b><span>worldwide</span></div><div><b>Every dealer</b><span>worldwide</span></div><div><b>Every workshop</b><span>worldwide</span></div></div>
+    <div class="learn">Tech I worked with here</div>
+    <div class="chips"><span class="chip">Java</span><span class="chip">Spring</span><span class="chip">Quarkus</span><span class="chip">Kafka</span><span class="chip">AWS</span><span class="chip">Docker</span><span class="chip">Kubernetes</span><span class="chip">Terraform</span><span class="chip">Jenkins</span><span class="chip">GitHub Actions</span><span class="chip">SQL / NoSQL</span><span class="chip">Prometheus</span><span class="chip">Grafana</span><span class="chip">AKHQ</span><span class="chip">Scrum</span></div>
+    <div class="mini draw mi" data-d="fdl"></div>
+  </article>
+  <div class="co"><div class="coh"><h3 class="con">Flutter UK&amp;I</h3><span class="pdur" data-from="2025-10"></span></div><svg class="coart bet rv" style="--i:2" viewBox="0 0 280 96" role="img" aria-label="Football and match odds illustration">
+ <g class="ball"><defs><clipPath id="bc"><circle cx="46" cy="48" r="34"/></clipPath></defs><circle cx="46" cy="48" r="34"/><g clip-path="url(#bc)"><path class="pent" d="M46.0 37.0 L56.5 44.6 L52.5 56.9 L39.5 56.9 L35.5 44.6 Z M46.0 28.0 L35.5 20.4 L39.5 8.1 L52.5 8.1 L56.5 20.4 Z M65.0 41.8 L69.0 29.5 L81.9 29.5 L85.9 41.8 L75.5 49.4 Z M57.8 64.2 L70.7 64.2 L74.7 76.5 L64.2 84.1 L53.8 76.5 Z M34.2 64.2 L38.2 76.5 L27.8 84.1 L17.3 76.5 L21.3 64.2 Z M27.0 41.8 L16.5 49.4 L6.1 41.8 L10.1 29.5 L23.0 29.5 Z "/><path class="seam" d="M46.0 37.0 L46.0 28.0 M56.5 44.6 L65.0 41.8 M52.5 56.9 L57.8 64.2 M39.5 56.9 L34.2 64.2 M35.5 44.6 L27.0 41.8 "/></g><circle class="bo" cx="46" cy="48" r="34"/></g>
+ <rect class="slip" x="98" y="16" width="174" height="64" rx="14"/>
+ <text class="lbl" x="112" y="36">match odds</text>
+ <g class="odd"><rect x="110" y="44" width="46" height="26" rx="13"/><text x="133" y="61">2.10</text></g>
+ <g class="odd sel"><rect x="162" y="44" width="46" height="26" rx="13"/><text x="185" y="61">3.40</text></g>
+ <g class="odd"><rect x="214" y="44" width="46" height="26" rx="13"/><text x="237" y="61">1.85</text></g>
+</svg><div class="cos">via Blip.pt, Porto · Oct 2025 to now · Software engineer · 2 projects</div></div>
+  <article class="case">
+    <div class="where">Project 1 · platform replacement</div>
+    <h3>GBP-EVO: bringing a core betting platform in-house</h3>
+    <p>Flutter's brands (Sky Bet, Paddy Power, Betfair) relied on OpenBet, an external platform. GBP-EVO <b>replaces it with in-house services</b> to <b>cut third-party costs</b> and take full control of a business-critical system.</p>
+    <div class="reach"><div><b>Lower costs</b><span>no vendor platform</span></div><div><b>Full control</b><span>in-house services</span></div><div><b>Money-grade</b><span>correct and auditable</span></div></div>
+    <div class="learn">Tech I worked with here</div>
+    <div class="chips"><span class="chip">Java</span><span class="chip">Scala</span><span class="chip">Spring Boot</span><span class="chip">Kafka</span><span class="chip">gRPC</span><span class="chip">event-driven design</span><span class="chip">OpenTelemetry</span><span class="chip">Datadog</span><span class="chip">AWS</span><span class="chip">spec-driven dev</span></div>
+    <div class="mini draw mi" data-d="evo"></div>
+  </article>
+  <article class="case">
+    <div class="where">Project 2 · group-wide security</div>
+    <h3>Security and modernisation for every service</h3>
+    <p>I built automation that <b>reports vulnerabilities across the group</b> and <b>upgrades dependencies automatically</b>, plus tooling that lets any team adopt it in minutes.</p>
+    <div class="reach"><div><b>Fewer vulns</b><span>found and fixed early</span></div><div><b>Up to date</b><span>automatic upgrades</span></div><div><b>Easy to adopt</b><span>minutes per team</span></div></div>
+    <div class="learn">Tech I worked with here</div>
+    <div class="chips"><span class="chip">GitHub Actions</span><span class="chip">Maven</span><span class="chip">Python</span><span class="chip">Ansible</span><span class="chip">Terraform</span><span class="chip">DevSecOps</span><span class="chip">CI/CD</span></div>
+    <div class="mini draw mi" data-d="health"></div>
+  </article>
+  </div>
+  <div class="wr" aria-hidden="true"><div class="stick"><div class="cnt"><span id="cn">1 / 3</span><span class="tr"><i id="ct"></i></span></div><div class="frames" id="frames"></div></div></div>
+  </div>
+  <h3 class="rv" style="margin-top:clamp(40px,6vw,80px)">Next on the bench</h3>
+  <div class="next">
+    <div class="slot rv" style="--i:0"><div class="st">in progress</div><h3>Event-driven service with an LLM assistant</h3><p>A distributed system you can run locally, with a chat interface over its live data.</p></div>
+    <div class="slot rv" style="--i:1"><div class="st">planned</div><h3>Platform automation toolkit</h3><p>An open-source take on the CI/CD and dependency-health tooling I build at work.</p></div>
+    <div class="slot rv" style="--i:2"><div class="st">planned</div><h3>MCP server for ops</h3><p>Letting an AI agent read traces and metrics safely to help triage incidents.</p></div>
+  </div>
+  <p class="note">These three are upcoming personal projects; write-ups and code will land here.</p>
+</div></section>
+
+
+
+<section class="band" id="tools"><div class="wrap">
+  <h2><span class="ln"><span>Toolbox</span></span></h2>
+  <div class="tools" id="tl"></div>
+</div></section>
+
+<div class="cwrap" id="cw"><div class="cpin"><div class="chint" aria-hidden="true">keep scrolling</div><section class="band contact" id="contact"><div class="wrap">
+  <h2>Let's<br>talk.</h2>
+  <p class="lede" style="margin-top:28px">Open to backend, platform and DevOps roles, and to interesting projects.</p>
+  <a class="mail" href="mailto:filipecosta45232@gmail.com">filipecosta45232@gmail.com</a>
+  <div class="acts"><a class="cact" href="mailto:filipecosta45232@gmail.com"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>Email me</a><button class="cact" id="copy" type="button"><svg viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h3"/></svg><span>Copy email</span></button><a class="cact" href="https://www.linkedin.com/in/o-filipe-costa/"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.01M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/></svg>LinkedIn</a></div>
+  <div class="req">POST /conversations → 202 Accepted</div>
+</div></section></div></div>
+
+<div class="pl" id="pl" role="dialog" aria-modal="true" aria-label="How I build" hidden>
+  <div class="plt"><span class="pln">How I build</span><span class="plc" id="plc"></span><button class="xc" id="close" type="button" aria-label="Close">×</button></div>
+  <div class="plm">
+    <div class="plf" id="sd"><div class="plh">Tap any box to see what it does</div><svg id="sdsvg" role="img" aria-label="Architecture diagram"></svg><div class="endc" id="endc" hidden><div class="endb" role="status"><p class="endt">Demonstration ended</p><p class="ends">Thanks for watching.</p><div class="endbtns"><button class="eb" id="replay" type="button"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7"/><path d="M4 4v5h5"/></svg>Replay</button><button class="eb x2" id="exitb" type="button"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>Exit</button></div></div></div></div>
+    <div class="plx"><div class="swap" id="scap"><div class="sk" id="sk"></div><h3 id="sh"></h3><p id="sp"></p><div class="hood" id="st"></div><div class="uw" id="uw"></div></div><div class="sdlog" id="sdlog" aria-hidden="true"></div></div>
+  </div>
+  <div class="plb">
+    <button class="cb" id="prev" type="button" aria-label="Previous chapter"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button class="cb pp" id="pp" type="button" aria-label="Pause"><svg viewBox="0 0 24 24" id="ppi"></svg></button>
+    <button class="cb" id="next" type="button" aria-label="Next chapter"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+    <div class="segs" id="segs"></div>
+  </div>
+</div>
+<footer><div class="wrap"><span>Filipe Costa, Porto, Portugal</span><span>© 2026</span></div></footer>
+
+<script>
+{
+const red=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const $=id=>document.getElementById(id);
+const cl=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+const MQ=["Java","Spring Boot","Quarkus","Kafka","gRPC","AWS","Kubernetes","Terraform","Redis","PostgreSQL","OpenTelemetry","Datadog","GitHub Actions","RAG","MCP"];
+const mqh=MQ.map(x=>`<span>${x}</span>`).join("");$("mq").innerHTML=mqh+mqh;
+
+/* ---------- how I build: player ---------- */
+const ND={
+ client:{c:0,r:1,t:"Clients",s:"web / apps",at:0},
+ edge:{c:1,r:1,t:"CDN + WAF",s:"TLS / DDoS",at:0},
+ lb:{c:2,r:1,t:"Load balancer",s:"L7 / multi-AZ",at:0},
+ gw:{c:3,r:1,t:"API gateway",s:"auth / limits",at:0},
+ svc:{c:4,r:1,t:"Services",s:"Spring/Quarkus",rep:1,at:1},
+ cache:{c:4,r:0,t:"Redis",s:"cache-aside",at:2},
+ db:{c:4,r:2,t:"PostgreSQL",s:"HA + replicas",at:3},
+ kafka:{c:5,r:1,t:"Kafka",s:"partitioned",at:4},
+ dlq:{c:5,r:0,t:"Retry + DLQ",s:"backoff",at:5},
+ cons:{c:6,r:1,t:"Consumers",s:"idempotent",rep:1,at:5},
+ ext:{c:6,r:2,t:"External APIs",s:"behind ACL",at:6}};
+const ED=[["client","edge"],["edge","lb"],["lb","gw"],["gw","svc"],["svc","cache"],["svc","db"],["svc","kafka"],["kafka","cons"],["cons","ext"],["kafka","dlq",1]];
+const ZN=[["edge",["edge","lb","gw"],0],["compute",["svc","cache","db"],1],["async",["kafka","dlq","cons","ext"],4]];
+const E4=["client","edge","lb","gw"],SV=[...E4,"svc"],RD=[...SV,"cache"],WR=[...SV,"db"],EV=[...WR,"svc","kafka"],CO=[...EV,"cons"],EX=[...EV,"cons","ext"];
+const CH=[
+ {n:"The edge",u:"A load balancer and gateway always; CDN and WAF once you're public-facing.",k:"chapter 1: the edge",h:"Three layers before a request touches code.",p:"TLS terminates at the CDN, the WAF filters abuse, an L7 load balancer spreads traffic across availability zones, and the gateway authenticates, rate-limits and mints the trace ID.",t:["TLS termination","WAF","L7 LB, multi-AZ","token bucket","JWT / mTLS"],f:E4,rt:[[E4,1,"co"]],bd:{gw:["trace id minted",""]},log:["edge · TLS 1.3 handshake · 12ms","waf · blocked 3 bot requests","lb · eu-west-1b healthy · routing","gw · jwt ok · traceparent 4bf9…"]},
+ {n:"Compute",u:"Always. Stateless is the default; state lives in the data layer.",k:"chapter 2: compute",h:"Stateless by design, so scaling is just a number.",p:"Spring Boot and Quarkus services on Kubernetes hold no session state. Every outbound call has a timeout, every pool is bounded, and bulkheads stop one slow dependency from taking every thread.",t:["stateless services","HPA","timeouts","bulkheads","bounded pools"],f:["gw","svc"],rt:[[SV,1,"co"]],bd:{svc:["3 replicas · 3 AZs","c"]},log:["k8s · svc ready 3/3","svc · pool 12/64 busy","svc · downstream timeout set 800ms","hpa · target cpu 60%"]},
+ {n:"Read path",u:"When reads heavily outnumber writes and slightly stale data is acceptable. Not before.",k:"chapter 3: the read path",h:"The database only sees what it must.",p:"Cache-aside in Redis for hot reads. TTLs carry jitter so keys never expire together, and invalidation is driven by events rather than guesswork.",t:["cache-aside","TTL jitter","event-driven invalidation"],f:["svc","cache"],rt:[[RD,1,"co"]],bd:{cache:["hit","c"]},log:["GET /markets 200 · cache hit · 4ms","cache · ttl 30s ±5s jitter","GET /odds 200 · cache hit · 3ms","cache · invalidated by event"]},
+ {n:"Write path",u:"Always. Read replicas only when read load or availability demands them.",k:"chapter 4: the write path",h:"Correct under concurrency.",p:"Postgres is the source of truth. Optimistic locking with a version column prevents lost updates, HikariCP limits protect the primary, and replicas serve reads that tolerate lag.",t:["optimistic locking","read replicas","HikariCP","read-your-writes"],f:["svc","db"],rt:[[RD,.4,"co"],[WR,.6,"co"]],bd:{db:["version check",""]},log:["POST /bets 201 · tx 18ms","db · UPDATE … WHERE version = 41","db · pool 9/50","replica lag 120ms · ok"]},
+ {n:"Events",u:"When other services or slow work need to react to a change. A simple CRUD service doesn't need Kafka.",k:"chapter 5: events",h:"Slow work never slows the user down.",p:"Once the bet is saved, the service publishes an event. Kafka topics are partitioned by account, so events for one account stay in order while consumers scale out. SQS/SNS when a simple queue is enough.",t:["Kafka","partition keys","idempotent producer","SQS / SNS"],f:["svc","db","kafka"],rt:[[RD,.3,"co"],[EV,.7,"co"]],bd:{kafka:["key = accountId",""]},log:["POST /bets 201 · saved","kafka · bets.v1 · partition 7","producer · acks=all · idempotent","topic lag · 0"]},
+ {n:"Consumers",u:"With any event-driven flow. Retry topics and a DLQ as soon as a failed message can't simply be dropped.",k:"chapter 6: consumers",h:"Assume every message arrives twice.",p:"Consumers deduplicate by event ID, so processing the same message twice changes nothing. Failures step aside into retry topics with exponential backoff, then a dead-letter queue that can be replayed.",t:["idempotent consumers","retry topics","DLQ + replay","consumer groups"],f:["kafka","cons","dlq"],rt:[[RD,.25,"co"],[CO,.6,"co"],[["kafka","dlq"],.15,"amb"]],bd:{cons:["dedupe by event id","c"],dlq:["backoff 1s → 5m",""]},log:["cons · evt 81c3 · applied","cons · group bets-settle · 6 members","retry.1m · 1 message","cons · lag 12 · healthy"]},
+ {n:"Boundaries",u:"Whenever an external or legacy system's model differs from ours.",k:"chapter 7: boundaries",h:"Other people's systems stay at the edge of mine.",p:"An anti-corruption layer translates partner models so they never leak into the domain. Calls run behind timeouts and circuit breakers, and multi-step flows run as sagas with compensating actions.",t:["anti-corruption layer","circuit breaker","sagas","contract tests"],f:["cons","ext"],rt:[[RD,.25,"co"],[EX,.75,"co"]],bd:{ext:["adapter + ACL",""]},log:["acl · partner v3 → domain model","cons · partner 200 · 140ms","saga · step 2/3 done","breaker · closed · 0.2% errors"]},
+ {n:"Observability",u:"Always. Tracing from day one is far cheaper than adding it after an incident.",k:"chapter 8: observability",h:"If it isn't traced, it didn't happen.",p:"W3C trace context rides through HTTP, gRPC and Kafka headers, so one trace follows a bet from the tap to the partner. RED metrics per service, SLOs with error budgets, and alerts that page on symptoms, not noise.",t:["OpenTelemetry","W3C traceparent","RED metrics","SLOs + error budgets","Datadog"],f:["band"],rt:[[RD,.35,"co"],[EX,.65,"co"]],bd:{},log:["trace 4bf9… · 9 spans · 212ms","slo · availability 99.95% · ok","error budget · 71% left","alert · none firing"]},
+ {n:"Traffic ×10",u:"Rate limits from day one; autoscaling when load is spiky.",b:1,k:"bad day 1 of 4",h:"10× traffic. Still up.",p:"A big match kicks off. The gateway sheds clients over budget with 429 and Retry-After, the load balancer spreads the rest, pods scale out on CPU and consumer lag, and capped pools keep Postgres the calmest thing in the room.",t:["token bucket","429 + Retry-After","HPA on lag","bounded pools"],f:["gw","lb","svc","db"],rt:[[RD,.4,"co"],[WR,.25,"co"],[["client","edge","lb","gw"],.35,"red"]],rate:11,bd:{gw:["429 over limit","r"],svc:["pods ×3","c"],db:["pool capped at 50","a"]},st:{gw:"warn",svc:"hot"},log:["hpa · scaling 3 → 6","gw · client 9f2 over limit · 429","hpa · scaling 6 → 12","db · pool 48/50 · queueing, not failing"]},
+ {n:"Cache stampede",u:"Only for hot keys under heavy concurrency.",b:1,k:"bad day 2 of 4",h:"1,000 requests. 1 query.",p:"The hottest key expires under load. Single-flight elects one request to rebuild it while the rest wait or get a slightly stale value, so the database sees one query instead of a thousand.",t:["single-flight","request coalescing","stale-while-revalidate"],f:["svc","cache","db"],rt:[[RD,.82,"grey"],[[...SV,"cache","svc","db"],.18,"co"]],rate:9,bd:{cache:["hot key expired","a"],svc:["single-flight lock",""],db:["1 query","c"]},st:{cache:"warn"},log:["cache · miss markets:live","svc · single-flight leader elected","db · 1 query · 14ms","cache · repopulated · 997 waiters released"]},
+ {n:"Partner outage",u:"For any external dependency on a critical path.",b:1,k:"bad day 3 of 4",h:"Partner down. We're not.",p:"A partner starts timing out. Timeouts fire, the circuit breaker opens and fails fast, messages step aside into retry topics, and sagas compensate what already happened. Reads never notice.",t:["circuit breaker","retry topics + DLQ","saga compensation","graceful degradation"],f:["cons","ext","dlq","kafka"],rt:[[EX,.45,"red"],[["kafka","dlq"],.25,"amb"],[RD,.3,"co"]],rate:6,bd:{ext:["timeouts · 503","r"],cons:["circuit open","r"],dlq:["parked for replay","a"],svc:["still serving",""]},st:{ext:"bad",cons:"warn",dlq:"warn"},log:["cons · partner timeout after 2s","breaker · OPEN · failing fast","retry.5m · message parked","svc · reads healthy · p99 41ms"]},
+ {n:"Duplicates & races",u:"With any at-least-once delivery, which is almost every queue.",b:1,k:"bad day 4 of 4",h:"Delivered twice. Paid once.",p:"A rebalance replays offsets and two writes collide. Consumers drop repeats by event ID, partition keys keep per-account order, and optimistic locking rejects the stale write, which retries on fresh data.",t:["idempotency keys","exactly-once effects","optimistic locking","ordering by key"],f:["kafka","cons","db"],rt:[[CO,.5,"co"],[["kafka","cons"],.5,"grey"]],rate:6,bd:{kafka:["redelivery after rebalance","a"],cons:["duplicate dropped","c"],db:["v12 rejected · retry",""]},st:{cons:"hot"},log:["kafka · rebalance · offsets replayed","cons · evt 81c3 seen · skipped","db · update v12 rejected · stale","svc · re-read v13 · applied"]},
+ {n:"Recap",u:"",k:"the point",h:"Nobody noticed. That's the job.",p:"Not every system needs all of this. The skill is knowing which piece earns its place, and when. Every pattern here is something I've shipped or been on call for.",t:[],f:null,rt:[[RD,.4,"co"],[CO,.35,"co"],[EX,.25,"co"]],bd:{},log:["all systems normal","slo · 99.95% · ok","on-call · quiet night","deploy · canary 10% → 100%"]}];
+const DUR=8000;
+let ci=0,playing=true,el=0,P={},vert=false,pk=[],spans=[],last=0,pods=3,podT=0,logI=0,logT=0,logL=[],open=false;
+const sd=$("sd"),sv=$("sdsvg"),pl=$("pl");
+const BW=()=>vert?Math.min(112,(sd.clientWidth-32)/3-6):Math.min(128,sd.clientWidth/7-20),BH=()=>vert?34:50;
+const lay=()=>{const W=sd.clientWidth,H=sd.clientHeight;vert=W<640;const bw=BW(),bh=BH(),band=H-54;
+ for(const k in ND){const n=ND[k];let x,y;if(!vert){const pl2=bw/2+22;x=pl2+n.c*(W-2*pl2)/6;y=[.16,.46,.76][n.r]*(band-20)+12}else{x=[.18,.5,.82][n.r]*W;const pt=bh/2+10;y=pt+n.c*(band-pt-bh/2-14)/6}P[k]={x,y,w:bw,h:bh}}P.band={x:14,y:band,w:W-28,h:40}};
+const drawSD=()=>{if(!sd.clientWidth)return;lay();let o="";
+ if(!vert)for(const [z,ids,at] of ZN){const xs=ids.map(i=>P[i]);const x1=Math.min(...xs.map(p=>p.x-p.w/2))-12,x2=Math.max(...xs.map(p=>p.x+p.w/2))+12,y1=Math.min(...xs.map(p=>p.y-p.h/2))-30,y2=Math.max(...xs.map(p=>p.y+p.h/2))+12;o+=`<rect class="zone" data-at="${at}" x="${x1}" y="${y1}" width="${x2-x1}" height="${y2-y1}" rx="16"/><text class="zl" data-at="${at}" x="${x1+12}" y="${y1+17}">${z}</text>`}
+ for(const [a,b,d] of ED){const A1=P[a],B1=P[b];o+=`<line class="edge${d?" d":""}" data-a="${a}" data-b="${b}" x1="${A1.x}" y1="${A1.y}" x2="${B1.x}" y2="${B1.y}"/>`}
+ o+='<g id="pkg"></g>';
+ for(const k in ND){const n=ND[k],p=P[k],x=p.x-p.w/2,y=p.y-p.h/2;let rep="";if(n.rep)rep=`<rect class="rep" x="${x+8}" y="${y-8}" width="${p.w}" height="${p.h}" rx="${p.h/2}"/><rect class="rep" x="${x+4}" y="${y-4}" width="${p.w}" height="${p.h}" rx="${p.h/2}"/>`;
+  o+=`<g class="nd" data-k="${k}" tabindex="0" role="button" aria-label="${n.t}: what it does">${rep}<rect class="m" x="${x}" y="${y}" width="${p.w}" height="${p.h}" rx="${p.h/2}"/><text x="${p.x}" y="${vert?p.y+4:p.y-2}">${n.t}</text><text class="s" x="${p.x}" y="${p.y+14}">${n.s}</text></g>`}
+ const b=P.band;o+=`<g class="nd" data-k="band" tabindex="0" role="button" aria-label="Observability: what it does"><rect class="bandr" x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="10"/><text class="bandt" x="${b.x+14}" y="${b.y+18}">${vert?"otel trace":"observability · one otel trace across http, grpc and kafka"}</text></g><g id="spg"></g><g id="bdg"></g>`;
+ sv.innerHTML=o;sv.classList.toggle("v",vert);applyCh()};
+const applyCh=()=>{const C=CH[ci],st=C.st||{},maxAt=Math.min(ci,7),f=C.f;
+ const vis=k=>k==="band"?ci>=7:ND[k].at<=maxAt;
+ sv.querySelectorAll(".nd").forEach(g=>{const k=g.dataset.k;g.classList.toggle("hid",!vis(k));g.classList.toggle("dim",!!f&&vis(k)&&!f.includes(k));g.classList.remove("hot","warn","bad");if(st[k])g.classList.add(st[k])});
+ sv.querySelectorAll(".edge").forEach(l=>{const a=l.dataset.a,b=l.dataset.b,v=vis(a)&&vis(b);l.classList.toggle("hid",!v);l.classList.toggle("dim",!!f&&v&&!(f.includes(a)&&f.includes(b)))});
+ sv.querySelectorAll(".zone,.zl").forEach(z=>z.classList.toggle("hid",+z.dataset.at>maxAt));
+ drawBadges()};
+const drawBadges=()=>{const g=$("bdg");if(!g)return;const bd=CH[ci].bd||{};let o="";for(const k in bd){let [t,c]=bd[k];if(t.startsWith("pods"))t=`pods ×${pods}`;const p=P[k],w=t.length*7+16;let x=p.x+p.w/2-w+10,y=p.y-p.h/2-14;if(vert){x=cl(p.x-w/2,4,sd.clientWidth-w-4);y=p.y+p.h/2+4}x=cl(x,4,sd.clientWidth-w-4);o+=`<g class="bdg ${c}"><rect x="${x}" y="${y}" width="${w}" height="20" rx="10"/><text x="${x+w/2}" y="${y+14}">${t}</text></g>`}g.innerHTML=o};
+const ro=new ResizeObserver(drawSD);ro.observe(sd);
+const COL={co:"#2433ff",red:"#ff3b30",grey:"#a7a7b2",amb:"#f5a400"};
+const spawn=()=>{const rt=CH[ci].rt;let r=Math.random(),acc=0;for(const [route,w,c] of rt){acc+=w;if(r<=acc){pk.push({route,i:0,t:0,c});return}}};
+const logEl=$("sdlog");
+const pushLog=()=>{const L=CH[ci].log,line=L[logI%L.length];logI++;const e=/429|timeout|OPEN|rejected|miss/.test(line);logL.unshift(`<b>${new Date().toTimeString().slice(0,8)}</b> <span class="${e?"e":""}">${line}</span>`);logL=logL.slice(0,4);logEl.innerHTML=logL.join("<br>")};
+const segs=$("segs");
+segs.innerHTML=CH.map((c,i)=>`<button class="seg${c.b?" b":""}" type="button" data-i="${i}" aria-label="Chapter ${i+1}: ${c.n}" title="${c.n}"><i></i></button>`).join("");
+const SG=[...segs.querySelectorAll(".seg")];
+const paintSegs=()=>SG.forEach((s,i)=>s.firstChild.style.width=(i<ci?100:i>ci?0:Math.min(100,el/DUR*100))+"%");
+const ppi=$("ppi"),ppb=$("pp");
+const paintPP=()=>{ppi.innerHTML=playing?'<rect x="6" y="5" width="4" height="14" rx="1"/><rect x="14" y="5" width="4" height="14" rx="1"/>':'<path d="M7 4.5v15l13-7.5z"/>';ppb.setAttribute("aria-label",playing?"Pause":"Play")};
+const scap=$("scap");
+const fillCap=()=>{const C=CH[ci];$("sk").textContent=C.k;const h=$("sh");h.textContent=C.h;h.classList.toggle("bad",!!C.b);$("sp").textContent=C.p;$("st").innerHTML=C.t.map(x=>`<span>${x}</span>`).join("");hideTip&&typeof hideTip==="function"&&setTimeout(()=>{markChips($("st"))},0);const uw=$("uw");uw.hidden=!C.u;uw.innerHTML=C.u?`<b>${C.b?"I design for this":"I add it"}</b>${C.u}`:"";$("plc").textContent=`${ci+1} / ${CH.length} · ${C.n}`};
+const go=i=>{hideEnd();hideTip();i=cl(i,0,CH.length-1);ci=i;el=0;pods=3;podT=0;logI=0;logL=[];pk=pk.filter(p=>p.c==="co");applyCh();pushLog();paintSegs();if(red){fillCap();return}scap.classList.add("out");setTimeout(()=>{fillCap();scap.classList.remove("out")},200)};
+const endc=$("endc");function showEnd(){endc.hidden=false;$("replay").focus()}function hideEnd(){endc.hidden=true}
+$("replay").onclick=()=>{go(0);playing=true;paintPP()};$("exitb").onclick=()=>closeP();
+SG.forEach(s=>s.onclick=()=>go(+s.dataset.i));
+$("prev").onclick=()=>go(el>1500?ci:ci-1);
+$("next").onclick=()=>go(ci+1);
+ppb.onclick=()=>{if(!playing&&ci===CH.length-1&&el>=DUR)go(0);else hideEnd();playing=!playing;paintPP()};
+let lastFocus=null;
+const openP=()=>{lastFocus=document.activeElement;pl.hidden=false;document.body.classList.add("lock");open=true;playing=!red;paintPP();go(0);fillCap();drawSD();ppb.focus()};
+const closeP=()=>{pl.hidden=true;document.body.classList.remove("lock");open=false;if(lastFocus)lastFocus.focus()};
+$("open").onclick=openP;$("close").onclick=closeP;
+addEventListener("keydown",e=>{if(!open)return;if(e.key==="Escape")closeP();else if(e.key==="ArrowRight")go(ci+1);else if(e.key==="ArrowLeft")go(ci-1);else if(e.key===" "&&e.target.tagName!=="BUTTON"){e.preventDefault();ppb.click()}else if(e.key==="Tab"){const f=[...pl.querySelectorAll("button")];const i=f.indexOf(document.activeElement);if(e.shiftKey&&i<=0){e.preventDefault();f[f.length-1].focus()}else if(!e.shiftKey&&i===f.length-1){e.preventDefault();f[0].focus()}}});
+$("tzl").innerHTML=CH.map(c=>`<li class="${c.b?"b":""}">${c.n}</li>`).join("");
+const tick=ts=>{const dt=Math.min(.05,(ts-last)/1000||0);last=ts;
+ if(open){const C=CH[ci];
+  if(playing){el+=dt*1000;if(el>=DUR){if(ci<CH.length-1)go(ci+1);else{el=DUR;playing=false;paintPP();showEnd()}}paintSegs()}
+  if(!red&&Math.random()<dt*(C.rate||4))spawn();
+  if(C.bd&&C.bd.svc&&C.bd.svc[0].startsWith("pods")){podT+=dt;if(podT>1.2&&pods<12){podT=0;pods+=3;drawBadges()}}
+  logT+=dt;if(logT>1.4){logT=0;pushLog()}
+  const g=$("pkg"),sg=$("spg");if(g){let o="";pk=pk.filter(p=>{const A1=P[p.route[p.i]],B1=P[p.route[p.i+1]];if(!A1||!B1)return false;const L=Math.hypot(B1.x-A1.x,B1.y-A1.y)||1;p.t+=dt*230/L;if(p.t>=1){p.t=0;p.i++;const nk=p.route[p.i];if(ci>=7)spans.push({x:P.band.x+60+ND[nk].c*(P.band.w-90)/6+Math.random()*14,a:1,c:p.c});if(p.i>=p.route.length-1){if(p.c==="red"||p.c==="grey")spans.push({a:1,c:p.c,burst:nk});return false}}const C1=P[p.route[p.i]],D=P[p.route[p.i+1]],x=C1.x+(D.x-C1.x)*p.t,y=C1.y+(D.y-C1.y)*p.t;o+=`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="10" fill="${COL[p.c]}" opacity=".14"/><circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4.5" fill="${COL[p.c]}"/>`;return true});g.innerHTML=o}
+  if(sg){let o="";spans=spans.filter(s=>{s.a-=dt*.9;if(s.a<=0)return false;if(s.burst){const p=P[s.burst];o+=`<circle cx="${p.x+p.w/2-6}" cy="${p.y-p.h/2+6}" r="${(1-s.a)*16+4}" fill="none" stroke="${COL[s.c]}" stroke-width="2" opacity="${s.a.toFixed(2)}"/>`}else o+=`<rect x="${s.x.toFixed(1)}" y="${P.band.y+28}" width="22" height="4" rx="2" fill="${s.c==="grey"?"#6b6b78":COL[s.c]}" opacity="${s.a.toFixed(2)}"/>`;return true});sg.innerHTML=o}}
+ requestAnimationFrame(tick)};
+paintPP();requestAnimationFrame(tick);
+
+/* ---------- chip explanations ---------- */
+const TIP={"java": "The main language I build backend services in, from Java 8 to the latest LTS.", "java 8 to 21+": "The main language I build backend services in, from legacy Java 8 to modern LTS versions.", "scala": "A JVM language mixing functional and object-oriented styles; used for some services at Flutter.", "python": "Used for automation, scripts and CI/CD tooling.", "sql": "The language for querying and shaping data in relational databases.", "spring": "The Java framework I build most microservices with: web, data, security and config.", "spring boot": "The Java framework I build most microservices with: web, data, security and config.", "quarkus": "A fast, lightweight Java framework built for containers and Kubernetes.", "grpc": "Fast, strongly typed service-to-service calls using Protocol Buffers.", "junit": "The standard Java testing framework, for unit and integration tests.", "kafka": "A durable event log: services publish events and others react, without depending on each other.", "apache kafka": "A durable event log: services publish events and others react, without depending on each other.", "sqs / sns": "AWS messaging: SQS is a queue for work, SNS fans one message out to many subscribers.", "sns / sqs": "AWS messaging: SNS fans one message out to many subscribers, SQS queues work for consumers.", "postgresql": "A reliable relational database; the source of truth for critical data.", "redis": "An in-memory store, mostly used as a cache to keep hot reads fast.", "nosql": "Non-relational databases for flexible or very high-volume data.", "sql / nosql": "Relational and non-relational databases, chosen per use case.", "aws": "Amazon's cloud, where the services I build run.", "s3": "AWS object storage for files, backups and data exports.", "ec2": "AWS virtual machines.", "vpc": "A private network in AWS that isolates and connects your services.", "route 53": "AWS DNS: routes domain names to services, with health checks.", "eks": "AWS's managed Kubernetes service.", "cloudformation": "AWS's own infrastructure-as-code tool.", "api gateway": "A managed front door for APIs: routing, auth and throttling.", "lambda": "Serverless functions that run on demand, with no servers to manage.", "iam": "AWS identity and permissions: who can do what, with least privilege.", "dynamodb": "AWS's managed key-value database, built for massive scale.", "cloudwatch": "AWS logs, metrics and alarms.", "secrets manager": "Stores and rotates passwords and API keys so they never live in code.", "kubernetes": "Runs containers at scale: deploys, heals and scales services automatically.", "docker": "Packages a service and everything it needs into a portable container.", "terraform": "Infrastructure as code: cloud resources defined in files, reviewed and versioned like software.", "ansible": "Automates server configuration and repeatable operational tasks.", "github actions": "CI/CD pipelines that build, test and ship code on every change.", "jenkins": "A long-standing CI/CD server for build and deploy pipelines.", "gocd": "A CI/CD tool focused on modelling deployment pipelines.", "argo cd": "GitOps deployment: Kubernetes is kept in sync with what's in Git.", "maven": "Java build and dependency management.", "gradle": "A flexible build tool for Java and JVM projects.", "opentelemetry": "An open standard for traces, metrics and logs, so one request can be followed across services.", "datadog": "A monitoring platform: dashboards, APM traces, logs and alerts.", "prometheus": "Collects metrics from services and powers alerts.", "grafana": "Dashboards for visualising metrics.", "akhq": "A web UI for inspecting Kafka topics, messages and consumer groups.", "on-call": "Owning production: responding to alerts and incidents for the services I build.", "rag": "Retrieval-augmented generation: grounding an AI's answers in your own documents or data.", "mcp": "Model Context Protocol: a standard way to give AI agents safe access to tools and data.", "agentic workflows": "AI agents that plan and carry out multi-step tasks with tools.", "spec-driven dev": "Writing a clear spec first, then using it (and AI) to drive implementation and tests.", "scrum": "An agile process with sprints, planning and retrospectives.", "kanban": "An agile process focused on continuous flow and limiting work in progress.", "scrumban": "A blend of Scrum's structure and Kanban's flow.", "code review": "Reviewing each other's changes to keep quality high and share knowledge.", "mentoring": "Helping other engineers grow.", "event-driven design": "Services communicate through events instead of direct calls, so they stay loosely coupled.", "event-driven": "Services communicate through events instead of direct calls, so they stay loosely coupled.", "devsecops": "Building security checks into the delivery pipeline, not bolting them on at the end.", "ci/cd": "Automatically building, testing and deploying every change.", "tls termination": "Decrypting HTTPS at the edge so internal services don't each have to.", "waf": "Web application firewall: blocks malicious and bot traffic before it reaches the app.", "l7 lb, multi-az": "A load balancer that routes by request and spreads traffic across data centres, so one can fail.", "token bucket": "A rate-limiting method: each client gets a budget of requests that refills over time.", "jwt / mtls": "Ways to prove identity: signed tokens for users, mutual certificates between services.", "stateless services": "Services that keep no session data, so any copy can handle any request.", "hpa": "Kubernetes autoscaling: adds or removes service copies based on load.", "hpa on lag": "Autoscaling consumers based on how far behind they are on the queue.", "timeouts": "Never waiting forever on another system; fail fast instead.", "bulkheads": "Isolating resources so one slow dependency can't take down everything else.", "bounded pools": "Capping threads and connections so overload queues up instead of crashing.", "cache-aside": "Check the cache first; on a miss, read the database and store the result.", "ttl jitter": "Randomising cache expiry so keys don't all expire at the same moment.", "event-driven invalidation": "Clearing cached data when an event says it changed, instead of guessing.", "optimistic locking": "Detecting conflicting updates with a version number, so no change is silently lost.", "read replicas": "Copies of the database that serve reads and take load off the primary.", "hikaricp": "A fast Java database connection pool.", "read-your-writes": "Making sure a user always sees their own change right after making it.", "partition keys": "Choosing which Kafka partition an event goes to, which keeps related events in order.", "idempotent producer": "A Kafka setting that prevents duplicate messages when sends are retried.", "idempotent consumers": "Consumers that can safely process the same message twice with no extra effect.", "retry topics": "Failed messages move to separate topics and are retried later with growing delays.", "dlq + replay": "A dead-letter queue holds messages that keep failing, so they can be fixed and replayed.", "retry topics + dlq": "Retry failed messages with growing delays, then park them in a dead-letter queue.", "consumer groups": "Several consumers share a topic's load, each handling different partitions.", "anti-corruption layer": "A translation layer that keeps an external system's model out of ours.", "circuit breaker": "Stops calling a failing system for a while, so failures don't pile up.", "sagas": "Multi-step processes across services, with undo steps if something fails midway.", "saga compensation": "Undoing the earlier steps of a process when a later one fails.", "contract tests": "Tests that check two services still agree on their API.", "w3c traceparent": "The standard header that carries a trace ID from one service to the next.", "red metrics": "Rate, Errors, Duration: the three core health signals for any service.", "slos + error budgets": "Reliability targets, and how much failure we can afford before slowing down releases.", "429 + retry-after": "The 'too many requests' response, telling the client when to try again.", "single-flight": "When many requests want the same missing data, only one fetches it; the rest wait.", "request coalescing": "Merging identical concurrent requests into one.", "stale-while-revalidate": "Serving slightly old data while fresh data is fetched in the background.", "graceful degradation": "Keeping the core experience working when a non-critical part fails.", "idempotency keys": "A unique ID per request, so retrying it never applies the action twice.", "exactly-once effects": "Messages may arrive more than once, but their effect only ever happens once.", "ordering by key": "Events for the same account always processed in order."};
+const tip=document.createElement("div");tip.className="tip";tip.setAttribute("role","tooltip");tip.hidden=true;document.body.appendChild(tip);let tipFor=null;
+const tipKey=el=>el.textContent.trim().toLowerCase();
+const markChips=root=>(root||document).querySelectorAll(".plx .hood span").forEach(c=>{if(TIP[tipKey(c)]&&!c.hasAttribute("tabindex")){c.tabIndex=0;c.setAttribute("role","button");c.classList.add("tk")}});
+const hideTip=()=>{tip.hidden=true;if(tipFor)tipFor.classList.remove("open");tipFor=null};
+const NINFO={"client": ["Clients", "Web and mobile apps sending requests. They retry, so every write carries an idempotency key."], "edge": ["CDN + WAF", "Terminates HTTPS close to users, caches public content and blocks bots and attacks."], "lb": ["Load balancer", "Spreads traffic across healthy instances in several availability zones."], "gw": ["API gateway", "The front door: authentication, routing, rate limits, and the start of every trace."], "svc": ["Services", "Stateless Spring Boot / Quarkus services on Kubernetes. Any copy handles any request."], "cache": ["Redis", "Keeps hot data in memory so most reads never reach the database."], "db": ["PostgreSQL", "The source of truth. Protected with optimistic locking, connection limits and replicas."], "kafka": ["Kafka", "A durable event log. Services publish what happened; others react in their own time."], "dlq": ["Retry + DLQ", "Failed messages are retried with growing delays, then parked so they can be fixed and replayed."], "cons": ["Consumers", "Read events and do the follow-up work. Safe to run twice on the same message."], "ext": ["External APIs", "Partner systems we don't control, behind adapters, timeouts and circuit breakers."], "band": ["Observability", "OpenTelemetry traces every request across services, with Datadog dashboards and alerts."]};
+const showTip=(c,title,body)=>{if(tipFor===c){hideTip();return}hideTip();tipFor=c;c.classList.add("open");tip.innerHTML=`<b></b><span></span>`;tip.firstChild.textContent=title||c.textContent.trim();tip.lastChild.textContent=body||TIP[tipKey(c)];tip.hidden=false;const r=c.getBoundingClientRect(),tw=Math.min(300,innerWidth-24);tip.style.width=tw+"px";let x=cl(r.left+r.width/2-tw/2,12,innerWidth-tw-12);const th=tip.offsetHeight;let y=r.top-th-10;if(y<70)y=r.bottom+10;tip.style.left=x+"px";tip.style.top=y+"px"};
+document.addEventListener("click",e=>{const g=e.target.closest(".plf .nd");if(g&&!g.classList.contains("hid")){const [t,b]=NINFO[g.dataset.k];showTip(g,t,b);if(playing){playing=false;paintPP()}e.stopPropagation();return}const c=e.target.closest(".tk");if(c){showTip(c);e.stopPropagation()}else if(!e.target.closest(".tip"))hideTip()});
+document.addEventListener("keydown",e=>{const g=e.target.closest&&e.target.closest(".plf .nd");if(g&&(e.key==="Enter"||e.key===" ")){e.preventDefault();g.dispatchEvent(new MouseEvent("click",{bubbles:true}));return}const c=e.target.closest&&e.target.closest(".tk");if(c&&(e.key==="Enter"||e.key===" ")){e.preventDefault();showTip(c)}if(e.key==="Escape"&&tipFor){hideTip();e.stopImmediatePropagation()}},true);
+addEventListener("scroll",hideTip,{passive:true});addEventListener("resize",hideTip);
+markChips();
+/* ---------- experience maths ---------- */
+const START=new Date(2022,5,1),NOW=new Date();
+const mdiff=(a,b)=>(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth();
+const yrs=Math.ceil((mdiff(START,NOW)+1)/12);
+document.querySelectorAll(".xp").forEach(e=>e.textContent=yrs);
+const fmt=m=>{const y=Math.floor(m/12),r=m%12;return [y?`${y} yr${y>1?"s":""}`:"",r?`${r} mo${r>1?"s":""}`:""].filter(Boolean).join(" ")};
+document.querySelectorAll("[data-from]").forEach(e=>{const [fy,fm]=e.dataset.from.split("-").map(Number),to=e.dataset.to?e.dataset.to.split("-").map(Number):null;const m=mdiff(new Date(fy,fm-1,1),to?new Date(to[0],to[1]-1,1):NOW)+1;e.textContent=fmt(m)});
+/* ---------- reveals + boot ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.15,rootMargin:"0px 0px -8% 0px"});
+const watch=()=>document.querySelectorAll(".rv,.ln,.wl .draw").forEach(el=>{if(!el.closest(".hero"))io.observe(el)});
+const showHero=()=>{document.querySelectorAll(".hero .rv,.hero .ln").forEach(el=>el.classList.add("in"));big.querySelectorAll(".l1 .w").forEach((w,i)=>setTimeout(()=>w.classList.add("on"),red?0:200+i*190));const n1=big.querySelectorAll(".l1 .w").length;const t2=200+n1*190+500;big.querySelectorAll(".l2 .w").forEach((w,i)=>setTimeout(()=>w.classList.add("on"),red?0:t2+i*70));document.querySelectorAll(".fw").forEach((f,i)=>setTimeout(()=>f.classList.add("on"),red?0:t2+i*220))};
+setTimeout(()=>document.querySelectorAll(".rv,.ln").forEach(el=>el.classList.add("in")),9000);
+const boot=$("boot");
+const BL=["> booting filipe.costa","  starting jvm ... <span class=ok>ok</span>","  joining kafka consumer group ... <span class=ok>ok</span>","  terraform apply ... <span class=ok>ok</span>","  health checks ... <span class=ok>passing</span>","> ready"];
+const finish=()=>{boot.classList.add("done");setTimeout(()=>boot.remove(),1100);setTimeout(showHero,250);watch()};
+if(red){boot.remove();showHero();watch()}else{const bl=$("bl"),bp=$("bp");BL.forEach((t,i)=>{const s=document.createElement("span");s.innerHTML=t;s.style.animationDelay=(i*.1)+"s";bl.appendChild(s)});const t0=performance.now(),D=850;const step=t=>{const k=Math.min(1,(t-t0)/D);bp.textContent=Math.round(100*(1-Math.pow(1-k,3)));if(k<1)requestAnimationFrame(step);else setTimeout(finish,120)};requestAnimationFrame(step)}
+
+/* ---------- toolbox ---------- */
+const TL=[["Languages",["Java 8 to 21+","Scala","Python","SQL"]],["Frameworks",["Spring Boot","Quarkus","gRPC","JUnit"]],["Data & messaging",["Apache Kafka","SQS / SNS","SQL","PostgreSQL","Redis","NoSQL"]],["AWS",["S3","EC2","VPC","Route 53","EKS","CloudFormation","API Gateway","SNS / SQS","Lambda","IAM","DynamoDB","CloudWatch","Secrets Manager"]],["Cloud & infra",["Kubernetes","Docker","Terraform","Ansible"]],["Delivery",["GitHub Actions","Jenkins","GoCD","Argo CD","Maven","Gradle"]],["Observability",["OpenTelemetry","Datadog","Prometheus","Grafana","on-call"]],["AI engineering",["RAG","MCP","agentic workflows","spec-driven dev"]],["Ways of working",["Scrum","Kanban","Scrumban","code review","mentoring"]]];
+$("tl").innerHTML=TL.map(([h,c],i)=>`<div class="rv" style="--i:${i%3}"><h3>${h}</h3><div class="chips">${c.map(x=>`<span class="chip">${x}</span>`).join("")}</div></div>`).join("");markChips&&setTimeout(()=>markChips(),0);
+
+/* ---------- case diagrams ---------- */
+const box=(x,y,w,h,t,a)=>`<rect class="${a?"a":"w"}" x="${x}" y="${y}" width="${w}" height="${h}" rx="${h/2}"/><text x="${x+w/2}" y="${y+h/2+4}" text-anchor="middle">${t}</text>`;
+const ln=(x1,y1,x2,y2,c)=>`<line class="${c?"lc":"ln2"}" x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"/>`;
+const D={
+ fdl:()=>["cars","dealers","workshops"].map((t,i)=>ln(96,64+i*70,128,138)+box(8,46+i*70,88,36,t)).join("")+ln(208,138,236,92)+ln(208,138,236,190,1)+box(128,116,80,44,"router")+`<rect class="g" x="236" y="72" width="76" height="40" rx="20"/><text x="274" y="96" text-anchor="middle">FDL.Gate</text>`+box(236,168,76,44,"FDL-next",1)+[0,1,2].map(i=>ln(312,190,334,60+i*80,1)+box(334,42+i*80,60,34,"api "+(i+1))).join("")+`<text class="cap" x="200" y="262" text-anchor="middle">canonical model + adapters</text>`,
+ evo:()=>box(10,118,80,40,"brands")+ln(90,138,128,138,1)+box(128,104,92,68,"ACL",1)+`<rect class="g" x="250" y="22" width="132" height="40" rx="20"/><text x="316" y="46" text-anchor="middle" style="text-decoration:line-through">OpenBet</text>`+`<line class="ln2" x1="220" y1="122" x2="250" y2="44" stroke-dasharray="4 5"/>`+[0,1,2].map(i=>ln(220,140,250,100+i*58,1)+box(250,82+i*58,132,36,"in-house "+(i+1),i===0)).join("")+`<text class="cap" x="174" y="262" text-anchor="middle">replace capability by capability</text>`,
+ health:()=>[0,1,2,3,4].map(i=>ln(92,40+i*46,128,138)+box(10,24+i*46,82,32,"svc-"+(i+1))).join("")+box(128,112,96,52,"workflows",1)+ln(224,138,256,70,1)+ln(224,138,256,138,1)+ln(224,138,256,206,1)+box(256,52,130,36,"vuln report")+box(256,120,130,36,"bump PRs")+box(256,188,130,36,"risk per svc")+`<text class="cap" x="200" y="262" text-anchor="middle">paved road, adopted in minutes</text>`};
+const tags={fdl:"bmw / global data layer",evo:"flutter / in-house platform",health:"group / security automation"};
+$("frames").innerHTML=["fdl","evo","health"].map((d,i)=>`<div class="frame${i===0?" on":""}"><div class="mini draw${i===0?" in":""}" data-d="${d}"></div><span class="tag">${tags[d]}</span></div>`).join("");
+document.querySelectorAll(".mini").forEach(m=>{m.innerHTML=`<svg viewBox="0 0 400 276" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Architecture sketch">${D[m.dataset.d]()}</svg>`;m.querySelectorAll("line,path").forEach(l=>{try{l.style.setProperty("--L",Math.ceil(l.getTotalLength())+2)}catch(_){}})});
+
+/* ---------- scroll engine ---------- */
+const big=$("big");big.querySelectorAll(".l1,.l2").forEach(L=>{const parts=L.textContent.split('"');L.innerHTML=parts.map((t,i)=>{const ws=t.split(" ");return ws.map((w,j)=>(w?`<span class="w${i%2?" c":""}">${w}</span>`:"")+(j<ws.length-1?(w==="I"?"&nbsp;":" "):"")).join("")}).join("")});
+const WD=[...big.querySelectorAll(".w")];
+const pinP=el=>{const r=el.getBoundingClientRect();return cl(-r.top/(r.height-innerHeight),0,1)};
+const cw=$("cw"),ct=$("contact"),hint=cw.querySelector(".chint"),prog=$("prog");
+const cases=[...document.querySelectorAll(".wl .case")],frs=[...document.querySelectorAll(".frame")],cn=$("cn"),ctr=$("ct");
+const hs=$("career"),trk=$("track"),chs=[...trk.querySelectorAll(".ch")],yr=$("yr"),li=$("li");
+let act=-1,dist=0;
+const setAct=i=>{if(i===act)return;act=i;cases.forEach((c,j)=>c.classList.toggle("act",j===i));frs.forEach((f,j)=>{f.classList.toggle("on",j===i);f.classList.toggle("past",j<i);if(j===i)f.querySelector(".draw").classList.add("in")});cn.textContent=(i+1)+" / "+cases.length};
+const sizeHS=()=>{dist=Math.max(0,trk.scrollWidth-innerWidth);hs.style.height=(Math.max(dist,innerHeight*.9)+innerHeight*1.1)+"px"};
+let tk=false;
+const frame=()=>{tk=false;const H=document.documentElement.scrollHeight-innerHeight;prog.style.transform=`scaleX(${H>0?scrollY/H:0})`;
+ const hp=cl(scrollY/innerHeight,0,1);big.style.transform=`translateY(${-hp*60}px)`;big.style.opacity=1-hp*.6;
+ let best=0,bd=1e9;cases.forEach((c,i)=>{const r=c.getBoundingClientRect(),d=Math.abs(r.top+r.height/2-innerHeight/2);if(d<bd){bd=d;best=i}});setAct(best);
+ const wl=document.querySelector(".wl").getBoundingClientRect();ctr.style.transform=`scaleX(${cl((innerHeight/2-wl.top)/wl.height,0,1)})`;
+ const hp2=Math.min(1,pinP(hs)/.88);trk.style.transform=`translateX(${-hp2*dist}px)`;li.style.transform=`scaleX(${hp2})`;
+ const ys=chs.map(c=>c.dataset.y==="now"?NOW.getFullYear()+NOW.getMonth()/12:+c.dataset.y),xs=chs.map(c=>c.offsetLeft),ax=xs[0]+hp2*(xs[xs.length-1]-xs[0]);chs.forEach((c,i)=>c.classList.toggle("on",xs[i]<=ax+.5));
+ let yv=ys[0];for(let i=0;i<chs.length;i++){if(xs[i]<=ax+.5){yv=ys[i];if(i+1<chs.length&&xs[i+1]>ax)yv=ys[i]+(ys[i+1]-ys[i])*cl((ax-xs[i])/(xs[i+1]-xs[i]),0,1)}}
+ const yt=String(Math.floor(yv+1e-6));if(yr.textContent!==yt)yr.textContent=yt;
+ const cp=pinP(cw);ct.style.setProperty("--r",(cl(cp*1.6,0,1)*150).toFixed(1)+"%");ct.style.setProperty("--o",cl((cp-.45)*3,0,1).toFixed(3));hint.style.opacity=1-cl(cp*4,0,1)};
+if(red){WD.forEach(w=>w.classList.add("on"));setAct(0);chs.forEach(c=>c.classList.add("on"))}
+else{sizeHS();addEventListener("scroll",()=>{if(!tk){tk=true;requestAnimationFrame(frame)}},{passive:true});addEventListener("resize",()=>{sizeHS();frame()});frame()}
+
+$("copy").onclick=async e=>{const t=e.currentTarget.querySelector("span");try{await navigator.clipboard.writeText("filipecosta45232@gmail.com");t.textContent="Copied"}catch(_){t.textContent="Select it above"}setTimeout(()=>t.textContent="Copy email",2400)};
+}
+</script>
+</body>
+</html>
